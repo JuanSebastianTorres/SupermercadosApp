@@ -4,8 +4,6 @@ import os
 import pymysql
 from database import db  # 🔹 importamos db desde database.py
 
-pymysql.install_as_MySQLdb()
-
 # Cargar variables de entorno localmente (solo si existe .env)
 load_dotenv()
 
