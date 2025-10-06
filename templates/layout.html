@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>SupermercadosApp</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>SupermercadosApp</h1>
+    <nav>
+      <a href="/">Inicio</a> |
+      <a href="/clientes/">Clientes</a> |
+      <a href="/productos/">Productos</a> |
+      <a href="/ventas/">Ventas</a> |
+      <a href="/reportes/">Reportes</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>

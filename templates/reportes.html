@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Reportes de Ventas</h2>
+<canvas id="graficoVentas" width="400" height="200"></canvas>
+
+<script src="{{ url_for('static', filename='chart.js') }}"></script>
+<script>
+fetch('/reportes/ventas_por_producto')
+  .then(r => r.json())
+  .then(data => {
+    new Chart(document.getElementById('graficoVentas'), {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Ventas por Producto',
+          data: data.valores
+        }]
+      }
+    });
+  });
+</script>
+{% endblock %}

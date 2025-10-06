@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="inicio">
+  <h2>Bienvenido al Sistema de Gestión de Supermercados</h2>
+  <p>Seleccione un módulo para comenzar:</p>
+
+  <div class="modulos">
+    <a href="/clientes/" class="modulo-card"> Clientes</a>
+    <a href="/productos/" class="modulo-card"> Productos</a>
+    <a href="/ventas/" class="modulo-card"> Ventas</a>
+    <a href="/reportes/" class="modulo-card"> Reportes</a>
+  </div>
+</div>
+{% endblock %}
+

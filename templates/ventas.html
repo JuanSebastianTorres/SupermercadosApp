@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Registro de Ventas</h2>
+
+<form method="post" action="{{ url_for('ventas.listar_ventas') }}">
+  <label>Cliente:</label>
+  <select name="idCliente">
+    {% for c in clientes %}
+      <option value="{{ c.idCliente }}">{{ c.nombre }} {{ c.apellido }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Producto:</label>
+  <select name="idProducto">
+    {% for p in productos %}
+      <option value="{{ p.idProducto }}">{{ p.nombre }} (${{ p.precio }})</option>
+    {% endfor %}
+  </select>
+
+  <input type="number" name="cantidad" min="1" placeholder="Cantidad" required>
+  <button type="submit">Registrar Venta</button>
+</form>
+
+<h3>Historial</h3>
+<table border="1" cellpadding="5">
+  <tr><th>ID</th><th>Cliente</th><th>Total</th><th>Fecha</th></tr>
+  {% for v in ventas %}
+    <tr><td>{{ v.idVenta }}</td><td>{{ v.cliente.nombre }}</td><td>${{ v.total }}</td><td>{{ v.fechaVenta }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
