@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
 import pymysql
