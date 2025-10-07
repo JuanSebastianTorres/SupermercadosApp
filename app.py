@@ -20,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
     or "mysql+pymysql://root:zdyoqLmJyBEyedVCapsVRlWxABYLekfj@shuttle.proxy.rlwy.net:18990/railway"
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = os.getenv("SECRET_KEY", "clave_secreta_supermercados")
+app.secret_key = os.getenv("SECRET_KEY", "Supermercados2025")
 
 # Inicializar base de datos
 db = SQLAlchemy(app)
