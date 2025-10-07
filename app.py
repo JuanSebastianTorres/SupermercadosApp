@@ -4,17 +4,26 @@ import os
 import pymysql
 from database import db  # 🔹 importamos db desde database.py
 
+# Instalar PyMySQL como reemplazo de MySQLdb
+pymysql.install_as_MySQLdb()
+
 # Cargar variables de entorno localmente (solo si existe .env)
 load_dotenv()
 
 app = Flask(__name__)
 
-# Configuración de la base de datos usando variables de entorno
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# 🔹 Inicializamos db con la app
-db.init_app(app)
+# 🔹 Si existe la variable DATABASE_URL (Railway), la usa.
+# 🔹 Si no, usa SQLite local (modo desarrollo)
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    os.getenv("DATABASE_URL")
+    or "mysql+pymysql://root:zdyoqLmJyBEyedVCapsVRlWxABYLekfj@shuttle.proxy.rlwy.net:18990/railway"
+)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.getenv("SECRET_KEY", "clave_secreta_supermercados")
+
+# Inicializar base de datos
+db = SQLAlchemy(app)
 
 # Importar rutas y modelos después de inicializar db
 from models import *
