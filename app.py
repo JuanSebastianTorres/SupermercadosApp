@@ -24,10 +24,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv("SECRET_KEY", "Supermercados2025")
 
 # Inicializar base de datos
-db = SQLAlchemy(app)
+db.init_app(app)
+
 
 # Importar rutas y modelos después de inicializar db
-from models import *
+with app.app_context():
+    from models import *
+    db.create_all()
+
 from routes.clientes import clientes_bp
 from routes.productos import productos_bp
 from routes.ventas import ventas_bp
