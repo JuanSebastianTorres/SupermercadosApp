@@ -2,7 +2,14 @@
 {% block content %}
 <h2>Clientes</h2>
 <form method="post" action="{{ url_for('clientes.nuevo_cliente') }}">
-  <input name="tipoDocumento" placeholder="Tipo Doc">
+  <select name="tipoDocumento" required>
+    <option value="" disabled selected>Seleccione tipo de documento</option>
+    <option value="CC">Cédula de ciudadanía</option>
+    <option value="CE">Cédula de extranjería</option>
+    <option value="TI">Tarjeta de identidad</option>
+    <option value="PA">Pasaporte</option>
+    <option value="NIT">NIT</option>
+</select>
   <input name="numeroDocumento" placeholder="Número Doc">
   <input name="nombre" placeholder="Nombre">
   <input name="apellido" placeholder="Apellido">

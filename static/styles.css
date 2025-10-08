@@ -33,3 +33,13 @@ nav a {
   background: #003366;
   color: white;
 }
+select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+select:focus {
+    border-color: #0066cc;
+    outline: none;
+}

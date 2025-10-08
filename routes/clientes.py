@@ -15,7 +15,7 @@ def nuevo_cliente():
     tipo_doc = request.form['tipoDocumento']
     num_doc = request.form['numeroDocumento']
     nombre = request.form['nombre'].strip().lower()
-    apellido = request.form['apellido']
+    apellido = request.form['apellido'].strip().lower()
     correo = request.form.get('correo')
     celular = request.form.get('celular')
     
