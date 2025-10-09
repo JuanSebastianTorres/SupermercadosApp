@@ -19,6 +19,9 @@ def nuevo_cliente():
     correo = request.form.get('correo')
     celular = request.form.get('celular')
     
+    if Cliente.query.filter_by(numeroDocumento=numero_doc).first():
+        flash("Ya existe un cliente con ese número de documento.")
+        return redirect(url_for('clientes.listar_clientes'))
     
     nuevo = Cliente(
         tipoDocumento=tipo_doc,
@@ -31,5 +34,17 @@ def nuevo_cliente():
     
     db.session.add(nuevo)
     db.session.commit()
+
+    flash("Cliente agregado correctamente.")
     return redirect(url_for('clientes.listar_clientes'))
 
+@clientes_bp.route('/clientes/buscar', methods=['POST'])
+def buscar_cliente():
+    num_doc = request.form['numeroDocumentoBuscar'].strip()
+    cliente = Cliente.query.filter_by(numeroDocumento=num_doc).first()
+
+    if cliente:
+        return render_template('clientes.html', cliente=cliente)
+    else:
+        flash("No se encontró ningún cliente con ese número de documento.")
+        return redirect(url_for('clientes.listar_clientes'))

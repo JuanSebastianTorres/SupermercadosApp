@@ -43,3 +43,30 @@ select:focus {
     border-color: #0066cc;
     outline: none;
 }
+form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+input, select, button {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    background-color: #0c4a6e;
+    color: white;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0369a1;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #f9fafb;
+}
+th {
+    background-color: #e2e8f0;
+    text-align: left;
+}

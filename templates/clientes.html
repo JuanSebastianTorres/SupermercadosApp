@@ -18,10 +18,36 @@
   <button type="submit">Agregar</button>
 </form>
 
-<table>
-  <tr><th>ID</th><th>Nombre</th><th>Correo</th></tr>
-  {% for c in clientes %}
-    <tr><td>{{ c.idCliente }}</td><td>{{ c.nombre }} {{ c.apellido }}</td><td>{{ c.correo }}</td></tr>
-  {% endfor %}
+<hr>
+
+<!--  Formulario de busqueda -->
+<form action="{{ url_for('clientes.buscar_cliente') }}" method="post" style="margin-bottom:20px;">
+    <input type="text" name="numeroDocumentoBuscar" placeholder="Buscar por número de documento" required>
+    <button type="submit">Buscar</button>
+</form>
+
+<!-- Mostrar resultados -->
+{% if cliente %}
+<table border="1" cellpadding="6">
+    <tr><th>ID</th><td>{{ cliente.idCliente }}</td></tr>
+    <tr><th>Tipo Documento</th><td>{{ cliente.tipoDocumento }}</td></tr>
+    <tr><th>Número Documento</th><td>{{ cliente.numeroDocumento }}</td></tr>
+    <tr><th>Nombre</th><td>{{ cliente.nombre }}</td></tr>
+    <tr><th>Apellido</th><td>{{ cliente.apellido }}</td></tr>
+    <tr><th>Correo</th><td>{{ cliente.correo }}</td></tr>
+    <tr><th>Celular</th><td>{{ cliente.celular }}</td></tr>
+    <tr><th>Fecha Registro</th><td>{{ cliente.fechaRegistro }}</td></tr>
+    <tr><th>Puntos Acumulados</th><td>{{ cliente.puntosAcumulados }}</td></tr>
 </table>
+{% endif %}
+
+<!-- Mostrar mensajes flash -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
 {% endblock %}
