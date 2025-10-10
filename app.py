@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import pymysql
 from database import db  # Importa la instancia de SQLAlchemy desde database.py
+from datetime import timedelta
 
 # ---------------------------------------------
 # CONFIGURACION BaSICA Y CONEXION CON RAILWAY
@@ -25,6 +26,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv("SECRET_KEY", "Supermercados2025")
+
+# --- Configuración de la sesión ---
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)  # expira en 10 minutos
+app.config['SESSION_PERMANENT'] = False  # se elimina al cerrar el navegador
+app.config['SESSION_COOKIE_SECURE'] = True  # solo enviar cookie por HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # no accesible desde JavaScript
+
 
 # Inicializar la base de datos
 db.init_app(app)
@@ -57,6 +65,7 @@ app.register_blueprint(empleados_bp)
 # ---------------------------------------------
 @app.route('/')
 def index():
+    session.clear()
     # Si no hay usuario logueado, ir al login
     if 'usuario_id' not in session:
         return redirect(url_for('auth.login'))
