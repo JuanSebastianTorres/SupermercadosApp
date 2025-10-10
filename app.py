@@ -66,7 +66,7 @@ def index():
 
     # Redirigir segun el rol del empleado
     if rol == 'GERENTE':
-        return redirect(url_for('reportes.reportes_dashboard'))  # Vista principal del gerente
+        return redirect(url_for('reportes.reportes'))  # Vista principal del gerente
     elif rol == 'CAJERO':
         return redirect(url_for('ventas.listar_ventas'))  # Vista principal del cajero
     elif rol == 'ADMIN_INVENTARIO':
