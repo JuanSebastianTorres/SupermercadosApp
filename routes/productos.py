@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from database import db
 from models import Producto
+from routes.auth import login_requerido, rol_requerido
 
-productos_bp = Blueprint('productos', __name__, url_prefix='/productos')
+productos_bp = Blueprint('productos', __name__)
 
-@productos_bp.route('/')
+@productos_bp.route('/productos', methods=['GET'])
+@login_requerido
+@rol_requerido('ADMIN_INVENTARIO', 'GERENTE')
+
 def listar_productos():
     productos = Producto.query.all()
     return render_template('productos.html', productos=productos)

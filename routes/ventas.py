@@ -2,10 +2,14 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from database import db
 from models import Venta, DetalleVenta, Producto, Cliente
 from decimal import Decimal
+from routes.auth import login_requerido, rol_requerido
 
-ventas_bp = Blueprint('ventas', __name__, url_prefix='/ventas')
+ventas_bp = Blueprint('ventas', __name__)
 
-@ventas_bp.route('/')
+@ventas_bp.route('/ventas', methods=['GET'])
+@login_requerido
+@rol_requerido('CAJERO')
+
 def listar_ventas():
     ventas = Venta.query.all()
     clientes = Cliente.query.all()

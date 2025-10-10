@@ -24,13 +24,20 @@ class Sucursal(db.Model):
 
 class Empleado(db.Model):
     __tablename__ = 'Empleado'
+
     idEmpleado = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     apellido = db.Column(db.String(100), nullable=False)
-    cargo = db.Column(db.String(50), nullable=False)
-    correo = db.Column(db.String(120), unique=True)
+    correo = db.Column(db.String(120), unique=True, nullable=False)
     contrasenaHash = db.Column(db.String(255), nullable=False)
-    idSucursal = db.Column(db.Integer, db.ForeignKey('Sucursal.idSucursal'), nullable=False)
+    rol = db.Column(db.Enum('CAJERO', 'ADMIN_INVENTARIO', 'GERENTE', 'CLIENTE'), default='CAJERO')
+    idSucursal = db.Column(db.Integer, nullable=True)
+
+    def set_password(self, password):
+        self.contrasenaHash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.contrasenaHash, password)
 
 class Proveedor(db.Model):
     __tablename__ = 'Proveedor'
@@ -97,6 +104,18 @@ class Devolucion(db.Model):
 
     venta = db.relationship('Venta')
     producto = db.relationship('Producto')
+
+class Empleado(db.Model):
+    __tablename__ = 'Empleado'
+
+    idEmpleado = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    apellido = db.Column(db.String(100), nullable=False)
+    cargo = db.Column(db.String(50), nullable=False)
+    correo = db.Column(db.String(120), unique=True, nullable=False)
+    contrasenaHash = db.Column(db.String(255), nullable=False)
+    idSucursal = db.Column(db.Integer, db.ForeignKey('Sucursal.idSucursal'))
+    rol = db.Column(db.Enum('CAJERO', 'ADMIN_INVENTARIO', 'GERENTE'), default='CAJERO')
 
 
 

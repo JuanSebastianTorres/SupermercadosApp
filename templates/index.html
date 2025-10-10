@@ -9,6 +9,11 @@
     <a href="/productos/" class="modulo-card"> Productos</a>
     <a href="/ventas/" class="modulo-card"> Ventas</a>
     <a href="/reportes/" class="modulo-card"> Reportes</a>
+
+    {% if session.get('rol') == 'GERENTE' %}
+      <a href="/empleados/" class="modulo-card">👤 Empleados</a>
+    {% endif %}
+    
   </div>
 </div>
 {% endblock %}

@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from database import db
 from models import Cliente
+from routes.auth import login_requerido, rol_requerido
 
-clientes_bp = Blueprint('clientes', __name__, url_prefix='/clientes')
+clientes_bp = Blueprint('clientes', __name__)
 
-@clientes_bp.route('/')
+@clientes_bp.route('/clientes', methods=['GET'])
+@login_requerido
+@rol_requerido('GERENTE', 'CAJERO')
+
 def listar_clientes():
     clientes = Cliente.query.all()
     return render_template('clientes.html', clientes=clientes)

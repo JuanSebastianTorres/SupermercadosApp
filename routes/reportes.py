@@ -2,10 +2,14 @@ from flask import Blueprint, render_template, jsonify
 from models import Venta, Producto, DetalleVenta, Cliente
 from database import db
 from sqlalchemy import func
+from routes.auth import login_requerido, rol_requerido
 
-reportes_bp = Blueprint('reportes', __name__, url_prefix='/reportes')
+reportes_bp = Blueprint('reportes', __name__)
 
-@reportes_bp.route('/')
+@reportes_bp.route('/reportes', methods=['GET'])
+@login_requerido
+@rol_requerido('GERENTE')
+
 def reportes():
     return render_template('reportes.html')
 

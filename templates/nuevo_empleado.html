@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Registrar nuevo empleado</h2>
+
+<form method="POST" action="{{ url_for('empleados.nuevo_empleado') }}">
+  <label>Nombre:</label>
+  <input type="text" name="nombre" required>
+
+  <label>Apellido:</label>
+  <input type="text" name="apellido" required>
+
+  <label>Rol:</label>
+  <select name="rol" required>
+    <option value="CAJERO">Cajero</option>
+    <option value="ADMIN_INVENTARIO">Admin Inventario</option>
+    <option value="GERENTE">Gerente</option>
+  </select>
+
+  <label>Correo:</label>
+  <input type="email" name="correo" required>
+
+  <label>Contraseña:</label>
+  <input type="password" name="password" required>
+
+  <label>ID Sucursal:</label>
+  <input type="number" name="idSucursal" required>
+
+  <button type="submit">Guardar empleado</button>
+</form>
+
+<a href="{{ url_for('empleados.listar_empleados') }}">Volver a empleados</a>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+      <div class="{{ category }}">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+{% endblock %}

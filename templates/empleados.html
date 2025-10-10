@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Gestión de Empleados</h2>
+
+<a href="{{ url_for('empleados.nuevo_empleado') }}" class="btn">+ Nuevo empleado</a>
+
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Rol</th>
+      <th>Correo</th>
+      <th>ID Sucursal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in empleados %}
+    <tr>
+      <td>{{ e.idEmpleado }}</td>
+      <td>{{ e.nombre }}</td>
+      <td>{{ e.apellido }}</td>
+      <td>{{ e.rol }}</td>
+      <td>{{ e.correo }}</td>
+      <td>{{ e.idSucursal }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
