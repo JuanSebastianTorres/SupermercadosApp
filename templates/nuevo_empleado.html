@@ -25,10 +25,11 @@
   <label>ID Sucursal:</label>
   <input type="number" name="idSucursal" required>
 
-  <button type="submit">Guardar empleado</button>
+  <div class="form-actions">
+    <button type="submit">Guardar empleado</button>
+    <a href="{{ url_for('empleados.listar_empleados') }}" class="btn-volver">Volver a empleados</a>
+  </div>
 </form>
-
-<a href="{{ url_for('empleados.listar_empleados') }}">Volver a empleados</a>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -38,3 +39,4 @@
   {% endif %}
 {% endwith %}
 {% endblock %}
+

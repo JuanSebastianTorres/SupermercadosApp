@@ -115,3 +115,24 @@ th {
   border-radius: 4px;
   border: 1px solid #ccc;
 }
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-volver {
+  background-color: #6b7280;
+  color: white;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  display: inline-block;
+  text-align: center;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-volver:hover {
+  background-color: #4b5563;
+}
