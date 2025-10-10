@@ -9,12 +9,13 @@
     <input type="password" name="password" required>
     <button type="submit">Ingresar</button>
   </form>
+  
   {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, msg in messages %}
-        <div class="{{ category }}">{{ msg }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-</div>
+        {% if messages %}
+          {% set category, message = messages[-1] %}  {# solo el último mensaje #}
+          <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endif %}
+      {% endwith %}
+    </form>
+  </div>
 {% endblock %}
