@@ -1,21 +1,24 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
 import pymysql
-from database import db  # 🔹 importamos db desde database.py
+from database import db  # Importa la instancia de SQLAlchemy desde database.py
+
+# ---------------------------------------------
+# CONFIGURACION BaSICA Y CONEXION CON RAILWAY
+# ---------------------------------------------
 
 # Instalar PyMySQL como reemplazo de MySQLdb
 pymysql.install_as_MySQLdb()
 
-# Cargar variables de entorno localmente (solo si existe .env)
+# Cargar variables de entorno (.env)
 load_dotenv()
 
 app = Flask(__name__)
 
-
-# 🔹 Si existe la variable DATABASE_URL (Railway), la usa.
-# 🔹 Si no, usa SQLite local (modo desarrollo)
+# Configuracion de la base de datos
+# Si no hay DATABASE_URL, usa conexion por defecto (Railway)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     os.getenv("DATABASE_URL")
     or "mysql+pymysql://root:zdyoqLmJyBEyedVCapsVRlWxABYLekfj@shuttle.proxy.rlwy.net:18990/railway"
@@ -23,15 +26,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv("SECRET_KEY", "Supermercados2025")
 
-# Inicializar base de datos
+# Inicializar la base de datos
 db.init_app(app)
 
-
-# Importar rutas y modelos después de inicializar db
+# ---------------------------------------------
+# IMPORTAR MODELOS Y RUTAS
+# ---------------------------------------------
 with app.app_context():
     from models import *
     db.create_all()
 
+# Importar Blueprints (modulos)
 from routes.auth import auth_bp
 from routes.clientes import clientes_bp
 from routes.productos import productos_bp
@@ -39,23 +44,43 @@ from routes.ventas import ventas_bp
 from routes.reportes import reportes_bp
 from routes.empleados import empleados_bp
 
-# Registrar blueprints
-app.register_blueprint(empleados_bp)
+# Registrar Blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(clientes_bp)
 app.register_blueprint(productos_bp)
 app.register_blueprint(ventas_bp)
 app.register_blueprint(reportes_bp)
+app.register_blueprint(empleados_bp)
 
-# Ruta principal
+# ---------------------------------------------
+# RUTA PRINCIPAL (Redireccion segun el rol)
+# ---------------------------------------------
 @app.route('/')
 def index():
-    return redirect(url_for('auth.login'))
+    # Si no hay usuario logueado, ir al login
+    if 'usuario_id' not in session:
+        return redirect(url_for('auth.login'))
 
-# Ejecutar la app
+    # Verificar rol actual
+    rol = session.get('rol')
+
+    # Redirigir segun el rol del empleado
+    if rol == 'GERENTE':
+        return redirect(url_for('reportes.reportes_dashboard'))  # Vista principal del gerente
+    elif rol == 'CAJERO':
+        return redirect(url_for('ventas.listar_ventas'))  # Vista principal del cajero
+    elif rol == 'ADMIN_INVENTARIO':
+        return redirect(url_for('productos.listar_productos'))  # Vista principal del admin de inventario
+    else:
+        return redirect(url_for('auth.login'))
+
+# ---------------------------------------------
+# EJECUCION LOCAL O EN RAILWAY
+# ---------------------------------------------
 if __name__ == '__main__':
-    # Usar puerto dinámico asignado por Railway o fallback 5000
+    # Usar puerto asignado por Railway o 5000 local
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
