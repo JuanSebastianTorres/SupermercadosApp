@@ -54,7 +54,7 @@ def login():
 
             # Redirigir según el rol
             if empleado.rol == 'GERENTE':
-                return redirect(url_for('reportes.reportes'))
+                return render_template('inicio_gerente.html')
             elif empleado.rol == 'CAJERO':
                 return redirect(url_for('ventas.listar_ventas'))
             elif empleado.rol == 'ADMIN_INVENTARIO':
