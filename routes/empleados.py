@@ -3,9 +3,18 @@ from models import Empleado
 from database import db
 from routes.auth import login_requerido, rol_requerido
 
-empleados_bp = Blueprint('empleados', __name__)
+empleados_bp = Blueprint('empleados', __name__, url_prefix='/empleados')
 
-@empleados_bp.route('/empleados/nuevo', methods=['GET', 'POST'])
+#  Listar todos los empleados (solo para GERENTE)
+@empleados_bp.route('/')
+@login_requerido
+@rol_requerido('GERENTE')
+def listar_empleados():
+    empleados = Empleado.query.all()
+    return render_template('empleados.html', empleados=empleados)
+
+#  Crear un nuevo empleado (solo para GERENTE)
+@empleados_bp.route('/nuevo', methods=['GET', 'POST'])
 @login_requerido
 @rol_requerido('GERENTE')
 def nuevo_empleado():
@@ -24,12 +33,12 @@ def nuevo_empleado():
             correo=correo,
             idSucursal=idSucursal
         )
-        # 🔹 Aquí se aplica el hash automáticamente
+        # 🔹 Se aplica el hash automáticamente
         nuevo.set_password(password)
 
         db.session.add(nuevo)
         db.session.commit()
         flash("Empleado creado correctamente", "success")
-        return redirect(url_for('auth.dashboard'))
+        return redirect(url_for('empleados.listar_empleados'))
 
     return render_template('nuevo_empleado.html')
