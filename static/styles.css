@@ -71,10 +71,7 @@ th {
     text-align: left;
 }
 .flash-message {
-  margin: 10px 0;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-weight: bold;
+  margin-top: 10px;
   text-align: center;
 }
 
@@ -95,17 +92,22 @@ th {
 
 .login-container {
   max-width: 400px;
-  margin: 40px auto;
+  margin: 50px auto;
   background: #f9f9f9;
   padding: 25px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.login-form label {
+  font-weight: bold;
+  margin-bottom: 2px;
 }
 
 .login-form input {

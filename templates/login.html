@@ -2,20 +2,24 @@
 {% block content %}
 <div class="login-container">
   <h2>Iniciar sesión</h2>
-  <form method="POST" action="{{ url_for('auth.login') }}">
-    <label>Correo:</label>
-    <input type="email" name="correo" required>
-    <label>Contraseña:</label>
-    <input type="password" name="password" required>
+
+  <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+    <label for="correo">Correo:</label>
+    <input type="email" id="correo" name="correo" required>
+
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" name="password" required>
+
     <button type="submit">Ingresar</button>
+
+    <!-- Mensaje debajo del boton tras digitar -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% set category, message = messages[-1] %}
+        <p class="flash-message {{ category }}">{{ message }}</p>
+      {% endif %}
+    {% endwith %}
   </form>
-  
-  {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% set category, message = messages[-1] %}  {# solo el último mensaje #}
-          <p class="flash-message {{ category }}">{{ message }}</p>
-        {% endif %}
-      {% endwith %}
-    </form>
-  </div>
+</div>
 {% endblock %}
+
