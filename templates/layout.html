@@ -8,16 +8,30 @@
 <body>
   <header>
     <h1>SupermercadosApp</h1>
+
+    {% if 'usuario_id' in session %}
     <nav>
       <a href="/">Inicio</a> |
       <a href="/clientes/">Clientes</a> |
       <a href="/productos/">Productos</a> |
       <a href="/ventas/">Ventas</a> |
-      <a href="/reportes/">Reportes</a>
+      <a href="/reportes/">Reportes</a> |
+      <a href="/auth/logout">Cerrar sesión</a>
     </nav>
+    {% endif %}
   </header>
 
   <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
     {% block content %}
     {% endblock %}
   </main>
