@@ -1,34 +1,19 @@
 {% extends "layout.html" %}
+
 {% block content %}
 <div class="inicio">
   <h2>Panel del Gerente</h2>
-  <p>Bienvenido, {{ session['nombre'] }}. Selecciona una opción para gestionar:</p>
+  <p>Bienvenido, {{ session['nombre'] }} ({{ session['rol'] }})</p>
+  <p>Seleccione un módulo para gestionar:</p>
 
   <div class="modulos">
     <a href="{{ url_for('empleados.nuevo_empleado') }}" class="modulo-card">
       Gestión de Empleados
     </a>
-
     <a href="{{ url_for('reportes.reportes') }}" class="modulo-card">
-      Reportes de Ventas
+      Reportes
     </a>
   </div>
 </div>
+{% endblock %}
 
-<style>
-  .inicio {
-    text-align: center;
-    margin-top: 50px;
-  }
-  .modulos {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
-  }
-  .modulo-card {
-    background-color: #0d3b66;
-    color: white;
-    padding: 20px 40px;
-    border-radius: 10px;
-    text-d
