@@ -18,6 +18,7 @@ def login_requerido(func):
         return func(*args, **kwargs)
     return wrapper
 
+
 def rol_requerido(*roles):
     def decorator(func):
         @wraps(func)
@@ -47,8 +48,18 @@ def login():
             session['usuario_id'] = empleado.idEmpleado
             session['rol'] = empleado.rol
             session['nombre'] = empleado.nombre
+
             flash(f"Bienvenido, {empleado.nombre} ({empleado.rol})", "success")
-            return redirect(url_for('auth.dashboard'))
+
+            # Redirigir según el rol
+            if empleado.rol == 'GERENTE':
+                return redirect(url_for('reportes.reportes'))
+            elif empleado.rol == 'CAJERO':
+                return redirect(url_for('ventas.listar_ventas'))
+            elif empleado.rol == 'ADMIN_INVENTARIO':
+                return redirect(url_for('productos.listar_productos'))
+            else:
+                return redirect(url_for('auth.login'))
         else:
             flash("Correo o contraseña incorrectos", "danger")
 
@@ -65,14 +76,17 @@ def logout():
 @auth_bp.route('/dashboard')
 @login_requerido
 def dashboard():
+    """Redirige al panel correspondiente según el rol del usuario."""
     rol = session.get('rol')
 
     if rol == 'CAJERO':
-        return render_template('dashboard_cajero.html')
+        return redirect(url_for('ventas.listar_ventas'))
     elif rol == 'ADMIN_INVENTARIO':
-        return render_template('dashboard_inventario.html')
+        return redirect(url_for('productos.listar_productos'))
     elif rol == 'GERENTE':
-        return render_template('dashboard_gerente.html')
+        return redirect(url_for('reportes.reportes'))
+    else:
+        flash("Rol no autorizado")
+        return redirect(url_for('auth.login'))
 
-    return "Rol no autorizado", 403
 
