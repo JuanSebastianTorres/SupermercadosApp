@@ -11,12 +11,23 @@
 
     {% if 'usuario_id' in session %}
     <nav>
-      <a href="/">Inicio</a> |
-      <a href="/clientes/">Clientes</a> |
-      <a href="/productos/">Productos</a> |
-      <a href="/ventas/">Ventas</a> |
-      <a href="/reportes/">Reportes</a> |
-      <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+      <a href="/">Inicio</a>
+
+      {# --- Opciones para CAJERO --- #}
+      {% if session.get('rol') == 'CAJERO' %}
+        | <a href="{{ url_for('ventas.listar_ventas') }}">Ventas</a>
+
+      {# --- Opciones para ADMIN DE INVENTARIO --- #}
+      {% elif session.get('rol') == 'ADMIN_INVENTARIO' %}
+        | <a href="{{ url_for('productos.listar_productos') }}">Productos</a>
+
+      {# --- Opciones para GERENTE --- #}
+      {% elif session.get('rol') == 'GERENTE' %}
+        | <a href="{{ url_for('empleados.nuevo_empleado') }}">Empleados</a>
+        | <a href="{{ url_for('reportes.reportes') }}">Reportes</a>
+      {% endif %}
+
+      | <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
     </nav>
     {% endif %}
   </header>
