@@ -46,7 +46,6 @@ class Proveedor(db.Model):
     idProveedor = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(150), nullable=False)
     NIT = db.Column(db.String(20), unique=True, nullable=False)
-    contacto = db.Column(db.String(100))
     ciudad = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
     correo = db.Column(db.String(120))
@@ -65,7 +64,7 @@ class Producto(db.Model):
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Numeric(12,2), nullable=False)
     stock = db.Column(db.Integer, default=0)
-    codigoBarras = db.Column(db.String(50), unique=True)
+    referencia = db.Column(db.String(50), unique=True)
     idCategoria = db.Column(db.Integer, db.ForeignKey('Categoria.idCategoria'), nullable=False)
     idProveedor = db.Column(db.Integer, db.ForeignKey('Proveedor.idProveedor'), nullable=False)
 
