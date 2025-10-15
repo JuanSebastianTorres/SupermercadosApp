@@ -53,8 +53,8 @@
   const productos = {
     {% for p in productos %}
       "{{ p.referencia }}": {
-        nombre: "{{ p.nombre|escapejs }}",
-        descripcion: "{{ p.descripcion|escapejs }}",
+        nombre: "{{ p.nombre | replace('"', '\\"') | replace('\n', ' ') }}",
+        descripcion: "{{ p.descripcion | replace('"', '\\"') | replace('\n', ' ') }}",
         precio: "{{ p.precio }}"
       }{% if not loop.last %},{% endif %}
     {% endfor %}
@@ -80,6 +80,7 @@
     }
   });
 </script>
+
 
 {% endblock %}
 
