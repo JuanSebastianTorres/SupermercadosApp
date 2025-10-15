@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Registrar nuevo producto</h2>
+
+<form method="POST" action="{{ url_for('productos.guardar_producto') }}">
+  <label>Referencia:</label>
+  <input type="text" name="referencia" value="{{ referencia }}" required>
+
+  <label>Nombre:</label>
+  <input type="text" name="nombre" required>
+
+  <label>Descripción:</label>
+  <input type="text" name="descripcion">
+
+  <label>Precio:</label>
+  <input type="number" name="precio" required>
+
+  <label>Stock inicial:</label>
+  <input type="number" name="stock" min="0" value="0">
+
+  <label>Categoría:</label>
+  <select name="idCategoria" required>
+    {% for c in categorias %}
+      <option value="{{ c.idCategoria }}">{{ c.nombre }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Proveedor:</label>
+  <select name="idProveedor" required>
+    {% for p in proveedores %}
+      <option value="{{ p.idProveedor }}">{{ p.nombre }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit">Guardar producto</button>
+  <a href="{{ url_for('productos.listar_productos') }}" class="btn-volver">Volver</a>
+</form>
+
+<h3>Categorías registradas</h3>
+<table border="1">
+  <tr><th>ID</th><th>Nombre</th></tr>
+  {% for c in categorias %}
+  <tr><td>{{ c.idCategoria }}</td><td>{{ c.nombre }}</td></tr>
+  {% endfor %}
+</table>
+
+<h3>Proveedores registrados</h3>
+<table border="1">
+  <tr><th>ID</th><th>Nombre</th></tr>
+  {% for p in proveedores %}
+  <tr><td>{{ p.idProveedor }}</td><td>{{ p.nombre }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

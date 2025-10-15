@@ -121,7 +121,7 @@ th {
   margin-top: 15px;
 }
 
-.btn-volver {
+.btn-nuevo, .btn-volver {
   background-color: #6b7280;
   color: white;
   text-decoration: none;
@@ -133,7 +133,7 @@ th {
   transition: background 0.2s;
 }
 
-.btn-volver:hover {
+.btn-nuevo:hover .btn-volver:hover {
   background-color: #4b5563;
 }
 
