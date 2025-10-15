@@ -54,20 +54,11 @@ def agregar_producto():
 
     # Si el producto ya existe, sumar al stock
     if producto:
+        # Actualizar stock
         producto.stock += cantidad
-        flash(f"Stock actualizado para {producto.nombre}. Nuevo stock: {producto.stock}", "success")
-
-    # Si no existe, crear nuevo
+        db.session.commit()
     else:
-        nuevo = Producto(
-            referencia=referencia,
-            nombre=nombre,
-            descripcion=descripcion,
-            precio=precio,
-            stock=cantidad
-        )
-        db.session.add(nuevo)
-        flash(f"Nuevo producto '{nombre}' agregado correctamente", "success")
+        # Si no existe, redirige al formulario de "Nuevo producto"
+        return redirect(url_for('productos.nuevo_producto'))
 
-    db.session.commit()
     return redirect(url_for('productos.listar_productos'))

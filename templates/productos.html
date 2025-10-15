@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await fetch("/api/productos");
     productos = await res.json();
 
-    // 🔹 Ahora muestra las referencias en la lista desplegable
+    // Ahora muestra las referencias en la lista desplegable
     productos.forEach(p => {
       const option = document.createElement("option");
       option.value = p.referencia;
