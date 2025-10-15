@@ -2,9 +2,9 @@
 {% block content %}
 <h2>Gestión de Productos</h2>
 
-<form method="POST" action="{{ url_for('productos.agregar_producto') }}">
+<form method="POST" action="{{ url_for('productos.agregar_producto') }}" class="form-productos">
   <label>Referencia:</label>
-  <input name="referencia" list="referencias" placeholder="Escribe o selecciona..." required>
+  <input name="referencia" list="referencias" id="referencia" placeholder="Escribe o selecciona..." required>
   <datalist id="referencias">
     {% for p in productos %}
       <option value="{{ p.referencia }}">{{ p.nombre }}</option>
@@ -12,16 +12,16 @@
   </datalist>
 
   <label>Nombre:</label>
-  <input type="text" id="nombre" readonly>
+  <input type="text" id="nombre" name="nombre" readonly>
 
   <label>Descripción:</label>
-  <input type="text" id="descripcion" readonly>
+  <input type="text" id="descripcion" name="descripcion" readonly>
 
   <label>Precio:</label>
-  <input type="number" id="precio" readonly>
+  <input type="number" id="precio" name="precio" readonly>
 
   <label>Cantidad:</label>
-  <input type="number" name="cantidad" min="1" required>
+  <input type="number" name="cantidad" id="cantidad" min="1" required>
 
   <button type="submit">Agregar al stock</button>
   <a href="{{ url_for('productos.nuevo_producto') }}" class="btn-nuevo">Nuevo producto</a>
@@ -29,7 +29,12 @@
 
 <table border="1" cellpadding="5">
   <tr>
-    <th>ID</th><th>Referencia</th><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Stock</th>
+    <th>ID</th>
+    <th>Referencia</th>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Precio</th>
+    <th>Stock</th>
   </tr>
   {% for p in productos %}
     <tr>
@@ -42,6 +47,40 @@
     </tr>
   {% endfor %}
 </table>
+
+<script>
+  // Diccionario de productos (clave: referencia)
+  const productos = {
+    {% for p in productos %}
+      "{{ p.referencia }}": {
+        nombre: "{{ p.nombre|escapejs }}",
+        descripcion: "{{ p.descripcion|escapejs }}",
+        precio: "{{ p.precio }}"
+      }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  };
+
+  const refInput = document.getElementById('referencia');
+  const nombreInput = document.getElementById('nombre');
+  const descripcionInput = document.getElementById('descripcion');
+  const precioInput = document.getElementById('precio');
+
+  // Evento: al escribir o seleccionar referencia
+  refInput.addEventListener('input', function () {
+    const ref = this.value.trim();
+
+    if (productos[ref]) {
+      nombreInput.value = productos[ref].nombre;
+      descripcionInput.value = productos[ref].descripcion;
+      precioInput.value = productos[ref].precio;
+    } else {
+      nombreInput.value = '';
+      descripcionInput.value = '';
+      precioInput.value = '';
+    }
+  });
+</script>
+
 {% endblock %}
 
 
