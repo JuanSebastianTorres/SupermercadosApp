@@ -26,6 +26,7 @@ def obtener_productos():
     data = [
         {
             "id": p.idProducto,
+            "referencia": p.referencia,
             "nombre": p.nombre,
             "descripcion": p.descripcion,
             "precio": p.precio,
@@ -59,6 +60,7 @@ def agregar_producto():
     # Si no existe, crear nuevo
     else:
         nuevo = Producto(
+            referencia=referencia,
             nombre=nombre,
             descripcion=descripcion,
             precio=precio,

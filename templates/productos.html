@@ -38,10 +38,11 @@
 <hr>
 
 <table border="1" cellpadding="5">
-  <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Stock</th></tr>
+  <tr><th>ID</th><th>Referencia</th><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Stock</th></tr>
   {% for p in productos %}
     <tr>
       <td>{{ p.idProducto }}</td>
+      <td>{{ p.referencia }}</td>
       <td>{{ p.nombre }}</td>
       <td>{{ p.descripcion }}</td>
       <td>${{ p.precio }}</td>
@@ -64,9 +65,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await fetch("/api/productos");
     productos = await res.json();
 
+    // 🔹 Ahora muestra las referencias en la lista desplegable
     productos.forEach(p => {
       const option = document.createElement("option");
-      option.value = p.nombre;
+      option.value = p.referencia;
       referencias.appendChild(option);
     });
   } catch (err) {
@@ -74,11 +76,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   refInput.addEventListener("change", () => {
-    const producto = productos.find(p => p.nombre === refInput.value);
+    const producto = productos.find(p => p.referencia === refInput.value);
     if (producto) {
       nombre.value = producto.nombre;
       descripcion.value = producto.descripcion;
       precio.value = producto.precio;
+      nombre.setAttribute("readonly", true);
+      descripcion.setAttribute("readonly", true);
+      precio.setAttribute("readonly", true);
     } else {
       nombre.value = "";
       descripcion.value = "";
@@ -86,19 +91,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Modo nuevo producto
+  // 🔹 Modo nuevo producto
   nuevoBtn.addEventListener("click", () => {
-    nombre.removeAttribute("readonly");
-    descripcion.removeAttribute("readonly");
-    precio.removeAttribute("readonly");
     refInput.value = "";
     nombre.value = "";
     descripcion.value = "";
     precio.value = "";
+    nombre.removeAttribute("readonly");
+    descripcion.removeAttribute("readonly");
+    precio.removeAttribute("readonly");
     alert("Modo: Nuevo producto habilitado.");
   });
 });
 </script>
 {% endblock %}
+
 
 
