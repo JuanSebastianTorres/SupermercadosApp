@@ -23,7 +23,7 @@ def nuevo_cliente():
     correo = request.form.get('correo')
     celular = request.form.get('celular')
     
-    if Cliente.query.filter_by(numeroDocumento=numero_doc).first():
+    if Cliente.query.filter_by(numeroDocumento=num_doc).first():
         flash("Ya existe un cliente con ese número de documento.")
         return redirect(url_for('clientes.listar_clientes'))
     
