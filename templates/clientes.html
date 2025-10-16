@@ -26,19 +26,37 @@
     <button type="submit">Buscar</button>
 </form>
 
-<!-- Mostrar resultados -->
-{% if cliente %}
-<table border="1" cellpadding="6">
-    <tr><th>ID</th><td>{{ cliente.idCliente }}</td></tr>
-    <tr><th>Tipo Documento</th><td>{{ cliente.tipoDocumento }}</td></tr>
-    <tr><th>Número Documento</th><td>{{ cliente.numeroDocumento }}</td></tr>
-    <tr><th>Nombre</th><td>{{ cliente.nombre }}</td></tr>
-    <tr><th>Apellido</th><td>{{ cliente.apellido }}</td></tr>
-    <tr><th>Correo</th><td>{{ cliente.correo }}</td></tr>
-    <tr><th>Celular</th><td>{{ cliente.celular }}</td></tr>
-    <tr><th>Fecha Registro</th><td>{{ cliente.fechaRegistro }}</td></tr>
-    <tr><th>Puntos Acumulados</th><td>{{ cliente.puntosAcumulados }}</td></tr>
+<!-- Tabla de clientes -->
+<h3>Clientes registrados</h3>
+<table border="1" cellpadding="6" cellspacing="0">
+  <tr>
+    <th>ID</th>
+    <th>Tipo Doc</th>
+    <th>Número Doc</th>
+    <th>Nombre</th>
+    <th>Apellido</th>
+    <th>Correo</th>
+    <th>Celular</th>
+    <th>Fecha Registro</th>
+    <th>Puntos</th>
+  </tr>
+  {% for c in clientes %}
+  <tr>
+    <td>{{ c.idCliente }}</td>
+    <td>{{ c.tipoDocumento }}</td>
+    <td>{{ c.numeroDocumento }}</td>
+    <td>{{ c.nombre }}</td>
+    <td>{{ c.apellido }}</td>
+    <td>{{ c.correo or '-' }}</td>
+    <td>{{ c.celular or '-' }}</td>
+    <td>{{ c.fechaRegistro.strftime('%Y-%m-%d') if c.fechaRegistro else '-' }}</td>
+    <td>{{ c.puntosAcumulados or 0 }}</td>
+  </tr>
+  {% else %}
+  <tr>
+    <td colspan="9" style="text-align:center;">No hay clientes registrados</td>
+  </tr>
+  {% endfor %}
 </table>
-{% endif %}
 
 {% endblock %}
