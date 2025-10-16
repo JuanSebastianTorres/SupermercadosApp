@@ -18,14 +18,6 @@
   <button type="submit">Agregar</button>
 </form>
 
-<hr>
-
-<!--  Formulario de busqueda -->
-<form action="{{ url_for('clientes.buscar_cliente') }}" method="post" style="margin-bottom:20px;">
-    <input type="text" name="numeroDocumentoBuscar" placeholder="Buscar por número de documento" required>
-    <button type="submit">Buscar</button>
-</form>
-
 <!-- Tabla de clientes -->
 <h3>Clientes registrados</h3>
 <table border="1" cellpadding="6" cellspacing="0">
