@@ -40,5 +40,3 @@ def nuevo_empleado():
         db.session.commit()
         flash("Empleado creado correctamente", "success")
         return redirect(url_for('empleados.listar_empleados'))
-
-    return render_template('nuevo_empleado.html')

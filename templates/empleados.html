@@ -2,9 +2,33 @@
 {% block content %}
 <h2>Gestión de Empleados</h2>
 
-<div class="empleados-header">
-  <a href="{{ url_for('empleados.nuevo_empleado') }}" class="btn-volver">Nuevo empleado</a>
-</div>
+<form method="POST" action="{{ url_for('empleados.nuevo_empleado') }}">
+  <label>Nombre:</label>
+  <input type="text" name="nombre" required>
+
+  <label>Apellido:</label>
+  <input type="text" name="apellido" required>
+
+  <label>Rol:</label>
+  <select name="rol" required>
+    <option value="CAJERO">Cajero</option>
+    <option value="ADMIN_INVENTARIO">Admin Inventario</option>
+    <option value="GERENTE">Gerente</option>
+  </select>
+
+  <label>Correo:</label>
+  <input type="email" name="correo" required>
+
+  <label>Contraseña:</label>
+  <input type="password" name="password" required>
+
+  <label>ID Sucursal:</label>
+  <input type="number" name="idSucursal" required>
+
+  <div class="form-actions">
+    <button type="submit">Guardar empleado</button>
+  </div>
+</form>
 
 <table border="1" cellpadding="5" cellspacing="0">
   <thead>
