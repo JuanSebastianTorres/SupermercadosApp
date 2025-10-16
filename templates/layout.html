@@ -15,7 +15,7 @@
       {# --- Opciones para CAJERO --- #}
       {% if session.get('rol') == 'CAJERO' %}
         | <a href="{{ url_for('ventas.listar_ventas') }}">Ventas</a>
-        | <a href="{{ url_for('listar_clientes') }}">Clientes</a>
+        | <a href="{{ url_for('clientes.listar_clientes') }}">Clientes</a>
 
       {# --- Opciones para ADMIN DE INVENTARIO --- #}
       {% elif session.get('rol') == 'ADMIN_INVENTARIO' %}
