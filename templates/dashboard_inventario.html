@@ -1,8 +1,0 @@
-{% extends "layout.html" %}
-{% block content %}
-<h2>Panel de Inventario</h2>
-<ul>
-  <li><a href="{{ url_for('productos.listar_productos') }}">Gestión de productos</a></li>
-  <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
-</ul>
-{% endblock %}

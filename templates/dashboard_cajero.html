@@ -1,9 +1,0 @@
-{% extends "layout.html" %}
-{% block content %}
-<h2>Panel de Cajero</h2>
-<ul>
-  <li><a href="{{ url_for('ventas.listar_ventas') }}">Registrar ventas</a></li>
-  <li><a href="{{ url_for('clientes.listar_clientes') }}">Consultar clientes</a></li>
-  <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
-</ul>
-{% endblock %}
