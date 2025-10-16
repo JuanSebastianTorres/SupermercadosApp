@@ -11,13 +11,7 @@
       <option value="{{ c.idCliente }}">{{ c.nombre }} {{ c.apellido }}</option>
     {% endfor %}
   </select>
-
-  <!-- Botón para ir al módulo de clientes -->
-  <a href="{{ url_for('clientes.listar_clientes') }}" class="btn-nuevo">+ Nuevo cliente</a>
-
-  <br><br>
-
-  <label>Producto:</label>
+   <label>Producto:</label>
   <select name="idProducto" required>
     {% for p in productos %}
       <option value="{{ p.idProducto }}">{{ p.nombre }} (${{ p.precio }})</option>
@@ -26,8 +20,13 @@
 
   <input type="number" name="cantidad" min="1" placeholder="Cantidad" required>
   <button type="submit">Registrar Venta</button>
-</form>
 
+  <br><br>
+
+  <!-- Boton para ir al modulo de clientes -->
+  <a href="{{ url_for('clientes.listar_clientes') }}" class="btn-nuevo">Nuevo cliente</a>
+
+  
 <hr>
 
 <h3>Historial</h3>
