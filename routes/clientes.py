@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from database import db
 from models import Cliente
 from routes.auth import login_requerido, rol_requerido
