@@ -30,13 +30,5 @@
     <a href="{{ url_for('empleados.listar_empleados') }}" class="btn-volver">Volver a empleados</a>
   </div>
 </form>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, msg in messages %}
-      <div class="{{ category }}">{{ msg }}</div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
 {% endblock %}
 
