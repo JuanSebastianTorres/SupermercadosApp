@@ -12,8 +12,10 @@
     {% endfor %}
   </select>
 
+  <br><br>
+
   <!-- Selección del canal -->
-  <label>Canal:</label>
+  <label>Canal de Venta:</label>
   <select name="canal" id="canal" required>
     <option value="POS">Física (POS)</option>
     <option value="ONLINE">Online</option>
@@ -36,29 +38,40 @@
 
   <hr>
 
-  <!-- Tabla de carrito -->
-  <h3>Carrito de Productos</h3>
-  <table id="tablaCarrito" border="1" cellpadding="5">
-    <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
-        <th>Subtotal</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <h3>Total: $<span id="totalVenta">0</span></h3>
-
-  <button type="submit">Registrar Venta</button>
-  <a href="{{ url_for('clientes.listar_clientes') }}" class="btn-nuevo">Nuevo Cliente</a>
-
-  <!-- Campo oculto para enviar detalles -->
+  <!-- Campo oculto con los productos -->
   <input type="hidden" name="detalle_json" id="detalle_json">
+
+  <!-- BOTONES PRINCIPALES -->
+  <div style="text-align:center; margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+    <button type="submit" style="background-color:#004080; color:white; padding:8px 20px; border-radius:6px; border:none;">
+      Registrar Venta
+    </button>
+    <a href="{{ url_for('clientes.listar_clientes') }}" 
+       class="btn-nuevo" 
+       style="background-color:#6b7280; color:white; padding:8px 20px; border-radius:6px; text-decoration:none;">
+       + Nuevo Cliente
+    </a>
+  </div>
 </form>
+
+<hr>
+
+<!-- TABLA DE CARRITO (ABAJO) -->
+<h3>Carrito de Compra</h3>
+<table id="tablaCarrito" border="1" cellpadding="5" style="width:100%; background:#fafafa;">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+      <th>Subtotal</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<h3 style="text-align:right;">Total: $<span id="totalVenta">0</span></h3>
 
 <script>
 const carrito = [];
@@ -114,24 +127,5 @@ function eliminarProducto(i) {
   actualizarTabla();
 }
 </script>
-
-<hr>
-
-<h3>Historial de Ventas</h3>
-<table border="1" cellpadding="5">
-  <tr>
-    <th>ID</th>
-    <th>Cliente</th>
-    <th>Total</th>
-    <th>Fecha</th>
-  </tr>
-  {% for v in ventas %}
-    <tr>
-      <td>{{ v.idVenta }}</td>
-      <td>{{ v.cliente.nombre }}</td>
-      <td>${{ v.total }}</td>
-      <td>{{ v.fechaVenta }}</td>
-    </tr>
-  {% endfor %}
-</table>
 {% endblock %}
+
