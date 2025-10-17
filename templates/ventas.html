@@ -2,8 +2,8 @@
 {% block content %}
 <h2>Registro de Ventas</h2>
 
-<!-- Formulario de registro de venta -->
-<form method="POST" action="{{ url_for('ventas.nueva_venta') }}">
+<form id="formVenta" method="POST" action="{{ url_for('ventas.nueva_venta') }}">
+  <!-- Selección del cliente -->
   <label>Cliente:</label>
   <select name="idCliente" id="idCliente" required>
     <option value="" disabled selected>Seleccione un cliente</option>
@@ -11,23 +11,113 @@
       <option value="{{ c.idCliente }}">{{ c.nombre }} {{ c.apellido }}</option>
     {% endfor %}
   </select>
-   <label>Producto:</label>
-  <select name="idProducto" required>
+
+  <!-- Selección del canal -->
+  <label>Canal:</label>
+  <select name="canal" id="canal" required>
+    <option value="POS">Física (POS)</option>
+    <option value="ONLINE">Online</option>
+  </select>
+
+  <hr>
+
+  <!-- Selección de producto -->
+  <label>Producto:</label>
+  <select id="productoSelect">
     {% for p in productos %}
-      <option value="{{ p.idProducto }}">{{ p.nombre }} (${{ p.precio }})</option>
+      <option value="{{ p.idProducto }}" data-precio="{{ p.precio }}">
+        {{ p.nombre }} (${{ p.precio }})
+      </option>
     {% endfor %}
   </select>
 
-  <input type="number" name="cantidad" min="1" placeholder="Cantidad" required>
-  <button type="submit">Registrar Venta</button>
+  <input type="number" id="cantidadInput" min="1" placeholder="Cantidad" required>
+  <button type="button" id="agregarProducto">Agregar al carrito</button>
 
-  <!-- Boton para ir al modulo de clientes -->
-  <a href="{{ url_for('clientes.listar_clientes') }}" class="btn-nuevo">Nuevo cliente</a>
+  <hr>
+
+  <!-- Tabla de carrito -->
+  <h3>Carrito de Productos</h3>
+  <table id="tablaCarrito" border="1" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h3>Total: $<span id="totalVenta">0</span></h3>
+
+  <button type="submit">Registrar Venta</button>
+  <a href="{{ url_for('clientes.listar_clientes') }}" class="btn-nuevo">Nuevo Cliente</a>
+
+  <!-- Campo oculto para enviar detalles -->
+  <input type="hidden" name="detalle_json" id="detalle_json">
 </form>
-  
+
+<script>
+const carrito = [];
+const tabla = document.querySelector("#tablaCarrito tbody");
+const totalVenta = document.getElementById("totalVenta");
+const inputDetalle = document.getElementById("detalle_json");
+
+// Agregar producto al carrito
+document.getElementById("agregarProducto").addEventListener("click", () => {
+  const select = document.getElementById("productoSelect");
+  const id = select.value;
+  const nombre = select.options[select.selectedIndex].text.split(" ($")[0];
+  const precio = parseInt(select.options[select.selectedIndex].dataset.precio);
+  const cantidad = parseInt(document.getElementById("cantidadInput").value);
+
+  if (!cantidad || cantidad <= 0) {
+    alert("Ingrese una cantidad válida.");
+    return;
+  }
+
+  const existente = carrito.find(p => p.id === id);
+  if (existente) {
+    existente.cantidad += cantidad;
+    existente.subtotal = existente.cantidad * precio;
+  } else {
+    carrito.push({ id, nombre, precio, cantidad, subtotal: cantidad * precio });
+  }
+
+  actualizarTabla();
+});
+
+// Actualizar tabla
+function actualizarTabla() {
+  tabla.innerHTML = "";
+  let total = 0;
+  carrito.forEach((p, i) => {
+    total += p.subtotal;
+    tabla.innerHTML += `
+      <tr>
+        <td>${p.nombre}</td>
+        <td>$${p.precio}</td>
+        <td>${p.cantidad}</td>
+        <td>$${p.subtotal}</td>
+        <td><button type="button" onclick="eliminarProducto(${i})">❌</button></td>
+      </tr>`;
+  });
+  totalVenta.textContent = total;
+  inputDetalle.value = JSON.stringify(carrito);
+}
+
+function eliminarProducto(i) {
+  carrito.splice(i, 1);
+  actualizarTabla();
+}
+</script>
+
 <hr>
 
-<h3>Historial</h3>
+<h3>Historial de Ventas</h3>
 <table border="1" cellpadding="5">
   <tr>
     <th>ID</th>
