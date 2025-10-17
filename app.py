@@ -22,7 +22,7 @@ app = Flask(__name__)
 # Si no hay DATABASE_URL, usa conexion por defecto (Railway)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     os.getenv("DATABASE_URL")
-    or "mysql+pymysql://root:zdyoqLmJyBEyedVCapsVRlWxABYLekfj@shuttle.proxy.rlwy.net:18990/railway"
+    or "mysql+pymysql://root:zdyoqLmJyBEyedVCapsVRlWxABYLekfj@shuttle.proxy.rlwy.net:18990/SupermercadosApp"
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv("SECRET_KEY", "Supermercados2025")
