@@ -4,37 +4,45 @@
 
 <form id="formVenta" method="POST" action="{{ url_for('ventas.nueva_venta') }}">
   <!-- Selección del cliente -->
-  <label>Cliente:</label>
-  <select name="idCliente" id="idCliente" required>
-    <option value="" disabled selected>Seleccione un cliente</option>
-    {% for c in clientes %}
-      <option value="{{ c.idCliente }}">{{ c.nombre }} {{ c.apellido }}</option>
-    {% endfor %}
-  </select>
-
-  <br><br>
+  <div style="text-align:center; margin-bottom:15px;">
+    <label style="font-weight:bold;">Cliente:</label>
+    <select name="idCliente" id="idCliente" required style="width:300px; padding:6px; border-radius:5px;">
+      <option value="" disabled selected>Seleccione un cliente</option>
+      {% for c in clientes %}
+        <option value="{{ c.idCliente }}">{{ c.nombre }} {{ c.apellido }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
   <!-- Selección del canal -->
-  <label>Canal de Venta:</label>
-  <select name="canal" id="canal" required>
-    <option value="POS">Física (POS)</option>
-    <option value="ONLINE">Online</option>
-  </select>
+  <div style="text-align:center; margin-bottom:15px;">
+    <label style="font-weight:bold;">Canal de Venta:</label>
+    <select name="canal" id="canal" required style="width:200px; padding:6px; border-radius:5px;">
+      <option value="POS">Física (POS)</option>
+      <option value="ONLINE">Online</option>
+    </select>
+  </div>
 
   <hr>
 
-  <!-- Selección de producto -->
-  <label>Producto:</label>
-  <select id="productoSelect">
-    {% for p in productos %}
-      <option value="{{ p.idProducto }}" data-precio="{{ p.precio }}">
-        {{ p.nombre }} (${{ p.precio }})
-      </option>
-    {% endfor %}
-  </select>
+  <!-- Sección de productos -->
+  <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:20px;">
+    <label style="font-weight:bold;">Producto:</label>
+    <select id="productoSelect" style="width:280px; padding:6px; border-radius:5px;">
+      {% for p in productos %}
+        <option value="{{ p.idProducto }}" data-precio="{{ p.precio }}">
+          {{ p.nombre }} (${{ p.precio }})
+        </option>
+      {% endfor %}
+    </select>
 
-  <input type="number" id="cantidadInput" min="1" placeholder="Cantidad" required>
-  <button type="button" id="agregarProducto">Agregar al carrito</button>
+    <input type="number" id="cantidadInput" min="1" placeholder="Cantidad"
+           style="width:100px; padding:6px; border-radius:5px;" required>
+    <button type="button" id="agregarProducto"
+            style="background-color:#0369a1; color:white; border:none; border-radius:6px; padding:8px 16px; cursor:pointer;">
+      Agregar al carrito
+    </button>
+  </div>
 
   <hr>
 
@@ -43,12 +51,12 @@
 
   <!-- BOTONES PRINCIPALES -->
   <div style="text-align:center; margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
-    <button type="submit" style="background-color:#004080; color:white; padding:8px 20px; border-radius:6px; border:none;">
+    <button type="submit"
+            style="background-color:#004080; color:white; padding:10px 25px; border-radius:6px; border:none; font-weight:bold;">
       Registrar Venta
     </button>
-    <a href="{{ url_for('clientes.listar_clientes') }}" 
-       class="btn-nuevo" 
-       style="background-color:#6b7280; color:white; padding:8px 20px; border-radius:6px; text-decoration:none;">
+    <a href="{{ url_for('clientes.listar_clientes') }}"
+       style="background-color:#6b7280; color:white; padding:10px 25px; border-radius:6px; text-decoration:none; font-weight:bold;">
        + Nuevo Cliente
     </a>
   </div>
@@ -57,9 +65,9 @@
 <hr>
 
 <!-- TABLA DE CARRITO (ABAJO) -->
-<h3>Carrito de Compra</h3>
-<table id="tablaCarrito" border="1" cellpadding="5" style="width:100%; background:#fafafa;">
-  <thead>
+<h3 style="text-align:center;">Carrito de Compra</h3>
+<table id="tablaCarrito" border="1" cellpadding="5" style="width:90%; margin:auto; background:#fafafa; border-collapse:collapse;">
+  <thead style="background:#e2e8f0;">
     <tr>
       <th>Producto</th>
       <th>Precio</th>
@@ -71,7 +79,7 @@
   <tbody></tbody>
 </table>
 
-<h3 style="text-align:right;">Total: $<span id="totalVenta">0</span></h3>
+<h3 style="text-align:right; margin-right:5%;">Total: $<span id="totalVenta">0</span></h3>
 
 <script>
 const carrito = [];
@@ -128,4 +136,5 @@ function eliminarProducto(i) {
 }
 </script>
 {% endblock %}
+
 
