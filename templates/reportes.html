@@ -19,14 +19,15 @@
 
 <hr>
 
-<canvas id="graficoVentas" class="grafico"></canvas>
+<canvas id="graficoVentas"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const ctx = document.getElementById('grafico');
+const ctx = document.getElementById('graficoVentas');
 let chart;
 
 function cargarReporte(tipo) {
+  if (!tipo) return;
   fetch(`/api/${tipo}`)
     .then(res => res.json())
     .then(data => {
