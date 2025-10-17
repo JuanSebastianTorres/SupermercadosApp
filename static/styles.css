@@ -145,8 +145,8 @@ input[readonly] {
 canvas {
   display: block;
   margin: 20px auto;
-  max-width: 600px !important;  
-  height: 260px !important;    
+  max-width: 700px !important;  
+  height: 300px !important;    
   width: 80% !important;         
 }
 
