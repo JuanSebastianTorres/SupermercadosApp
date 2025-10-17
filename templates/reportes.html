@@ -1,71 +1,60 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h2>Reportes Gerenciales</h2>
+<h2>📊 Reportes Gerenciales - SupermercadosApp</h2>
+<p>Seleccione el tipo de reporte que desea visualizar:</p>
+
+<select id="tipoReporte">
+  <option value="productos_mas_vendidos_ciudad">Productos más vendidos por ciudad</option>
+  <option value="ticket_promedio">Ticket promedio por sucursal</option>
+  <option value="clientes_fidelizados">Top clientes con más puntos</option>
+  <option value="canal_ventas">Distribución de ventas (Online vs POS)</option>
+  <option value="quiebre_stock">Nivel de quiebre de stock</option>
+  <option value="proveedores_confiables">Proveedores más confiables</option>
+  <option value="promociones_ventas">Promociones con más ventas</option>
+  <option value="evolucion_mensual">Evolución mensual de ventas</option>
+  <option value="rentabilidad_sucursales">Rentabilidad por sucursal</option>
+  <option value="tasa_devoluciones">Tasa de devoluciones por categoría</option>
+</select>
 
 <hr>
 
-<h3>Ventas por Producto</h3>
-<canvas id="graficoVentas" width="400" height="200"></canvas>
+<canvas id="grafico" width="800" height="400"></canvas>
+
 <script src="{{ url_for('static', filename='chart.js') }}"></script>
 <script>
-fetch('/reportes/ventas_por_producto')
-  .then(r => r.json())
-  .then(data => {
-    new Chart(document.getElementById('graficoVentas'), {
-      type: 'bar',
-      data: {
-        labels: data.labels,
-        datasets: [{
-          label: 'Unidades Vendidas',
-          data: data.valores,
-          backgroundColor: 'rgba(75, 192, 192, 0.5)'
-        }]
-      },
-      options: { scales: { y: { beginAtZero: true } } }
+const ctx = document.getElementById('grafico');
+let chart;
+
+function cargarReporte(tipo) {
+  fetch(`/api/${tipo}`)
+    .then(res => res.json())
+    .then(data => {
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: tipo === "canal_ventas" ? 'pie' : 
+               tipo === "evolucion_mensual" ? 'line' : 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: tipo.replaceAll('_', ' ').toUpperCase(),
+            data: data.valores,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+      });
     });
-  });
+}
+
+document.getElementById('tipoReporte').addEventListener('change', (e) => {
+  cargarReporte(e.target.value);
+});
+
+// cargar uno por defecto al entrar
+cargarReporte('productos_mas_vendidos_ciudad');
 </script>
-
-<hr>
-
-<h3>Ventas por Día</h3>
-<table border="1" cellpadding="5">
-  <tr><th>Fecha</th><th>Total Ventas</th><th># Ventas</th></tr>
-  {% for v in ventas_por_dia %}
-    <tr><td>{{ v.fecha }}</td><td>${{ v.total_dia }}</td><td>{{ v.num_ventas }}</td></tr>
-  {% endfor %}
-</table>
-
-<hr>
-
-<h3>Top 5 Clientes</h3>
-<table border="1" cellpadding="5">
-  <tr><th>Cliente</th><th># Compras</th><th>Total Gastado</th></tr>
-  {% for c in top_clientes %}
-    <tr><td>{{ c.nombre }} {{ c.apellido }}</td><td>{{ c.num_compras }}</td><td>${{ c.total_gastado }}</td></tr>
-  {% endfor %}
-</table>
-
-<hr>
-
-<h3>Productos con Bajo Stock</h3>
-<table border="1" cellpadding="5">
-  <tr><th>Producto</th><th>Stock</th></tr>
-  {% for p in productos_bajo_stock %}
-    <tr><td>{{ p.nombre }}</td><td>{{ p.stock }}</td></tr>
-  {% endfor %}
-</table>
-
-<hr>
-
-{% if ventas_sucursal %}
-<h3>Ventas por Sucursal</h3>
-<table border="1" cellpadding="5">
-  <tr><th>Sucursal</th><th>Total Ventas</th></tr>
-  {% for s in ventas_sucursal %}
-    <tr><td>{{ s.nombre }}</td><td>${{ s.total_ventas }}</td></tr>
-  {% endfor %}
-</table>
-{% endif %}
 {% endblock %}
+
 
