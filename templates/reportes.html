@@ -4,6 +4,7 @@
 <p>Seleccione el tipo de reporte que desea visualizar:</p>
 
 <select id="tipoReporte">
+  <option value="Opciones">Seleccione una opcion</option>
   <option value="productos_mas_vendidos_ciudad">Productos más vendidos por ciudad</option>
   <option value="ticket_promedio">Ticket promedio por sucursal</option>
   <option value="clientes_fidelizados">Top clientes con más puntos</option>
@@ -18,7 +19,7 @@
 
 <hr>
 
-<canvas id="graficoVentas" width="300" height="150"></canvas>
+<canvas id="graficoVentas" class="grafico"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -51,10 +52,8 @@ function cargarReporte(tipo) {
 document.getElementById('tipoReporte').addEventListener('change', (e) => {
   cargarReporte(e.target.value);
 });
-
-// cargar uno por defecto al entrar
-cargarReporte('productos_mas_vendidos_ciudad');
 </script>
+
 {% endblock %}
 
 

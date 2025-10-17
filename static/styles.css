@@ -142,3 +142,24 @@ input[readonly] {
   cursor: not-allowed;
 }
 
+#grafico-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}
+
+canvas.grafico {
+  width: 70% !important;
+  max-width: 700px;
+  height: 280px !important;
+  margin: 0 auto;
+  display: block;
+}
+
+
+h2, h3 {
+  text-align: center;
+}
+
+
