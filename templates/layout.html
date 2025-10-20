@@ -20,11 +20,16 @@
       {# --- Opciones para ADMIN DE INVENTARIO --- #}
       {% elif session.get('rol') == 'ADMIN_INVENTARIO' %}
         | <a href="{{ url_for('productos.listar_productos') }}">Productos</a>
+          <a href="{{ url_for('pedidos.listar_pedidos') }}">Creación de pedidos</a>
 
       {# --- Opciones para GERENTE --- #}
       {% elif session.get('rol') == 'GERENTE' %}
         | <a href="{{ url_for('empleados.listar_empleados') }}">Empleados</a>
         | <a href="{{ url_for('reportes.reportes') }}">Reportes</a>
+
+        {# --- Opciones para Proveedor --- #}
+      {% elif session.get('rol') == 'PROVEEDOR' %}
+        | <a href="{{ url_for('pedidos.pedidos_proveedor') }}">Gestión de pedidos</a>
       {% endif %}
 
       | <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>

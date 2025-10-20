@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Panel del Proveedor - Gestión de Pedidos</h2>
+
+<table border="1" cellpadding="5">
+  <tr><th>ID</th><th>Fecha</th><th>Estado</th><th>Acción</th></tr>
+  {% for p in pedidos %}
+    <tr>
+      <td>{{ p.idPedido }}</td>
+      <td>{{ p.fechaPedido }}</td>
+      <td>{{ p.estado }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('pedidos.actualizar_estado_proveedor', idPedido=p.idPedido) }}">
+          <select name="estado">
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="ENVIADO">Enviado</option>
+            <option value="RECIBIDO">Recibido</option>
+            <option value="CANCELADO">Cancelado</option>
+          </select>
+          <button type="submit">Actualizar</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

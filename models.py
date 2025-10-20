@@ -32,7 +32,7 @@ class Empleado(db.Model):
     apellido = db.Column(db.String(100), nullable=False)
     correo = db.Column(db.String(120), unique=True, nullable=False)
     contrasenaHash = db.Column(db.String(255), nullable=False)
-    rol = db.Column(db.Enum('CAJERO', 'ADMIN_INVENTARIO', 'GERENTE', 'CLIENTE'), default='CAJERO')
+    rol = db.Column(db.Enum('CAJERO', 'ADMIN_INVENTARIO', 'GERENTE', 'CLIENTE', 'PROVEEDOR'), default='CAJERO')
     idSucursal = db.Column(db.Integer, nullable=True)
 
     def set_password(self, password):

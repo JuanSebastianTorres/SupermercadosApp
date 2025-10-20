@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Gestión de Pedidos a Proveedores</h2>
+
+<!-- Formulario para nuevo pedido -->
+<form method="POST" action="{{ url_for('pedidos.nuevo_pedido') }}">
+  <label>Proveedor:</label>
+  <select name="idProveedor" required>
+    {% for p in proveedores %}
+      <option value="{{ p.idProveedor }}">{{ p.nombre }}</option>
+    {% endfor %}
+  </select>
+
+  <h4>Productos</h4>
+  <div id="productosContainer">
+    <div>
+      <select name="producto[]">
+        {% for prod in productos %}
+          <option value="{{ prod.idProducto }}">{{ prod.nombre }}</option>
+        {% endfor %}
+      </select>
+      <input type="number" name="cantidad[]" min="1" value="1">
+    </div>
+  </div>
+  <button type="button" onclick="agregarProducto()">Agregar Producto</button>
+  <button type="submit">Registrar Pedido</button>
+</form>
+
+<hr>
+
+<h3>Pedidos Existentes</h3>
+<table border="1" cellpadding="5">
+  <tr><th>ID</th><th>Proveedor</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr>
+  {% for p in pedidos %}
+    <tr>
+      <td>{{ p.idPedido }}</td>
+      <td>{{ p.proveedor.nombre }}</td>
+      <td>{{ p.fechaPedido }}</td>
+      <td>{{ p.estado }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('pedidos.cambiar_estado_admin', idPedido=p.idPedido) }}">
+          <select name="estado">
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="ENVIADO">Enviado</option>
+            <option value="RECIBIDO">Recibido</option>
+            <option value="CANCELADO">Cancelado</option>
+          </select>
+          <button type="submit">Actualizar</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+
+<script>
+function agregarProducto() {
+  const div = document.createElement("div");
+  div.innerHTML = document.querySelector("#productosContainer div").innerHTML;
+  document.getElementById("productosContainer").appendChild(div);
+}
+</script>
+{% endblock %}

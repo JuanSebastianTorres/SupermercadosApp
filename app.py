@@ -51,6 +51,7 @@ from routes.productos import productos_bp
 from routes.ventas import ventas_bp
 from routes.reportes import reportes_bp
 from routes.empleados import empleados_bp
+from routes.pedidos import pedidos_bp
 
 # Registrar Blueprints
 app.register_blueprint(auth_bp)
@@ -59,6 +60,8 @@ app.register_blueprint(productos_bp)
 app.register_blueprint(ventas_bp)
 app.register_blueprint(reportes_bp)
 app.register_blueprint(empleados_bp)
+app.register_blueprint(pedidos_bp)
+
 
 # ---------------------------------------------
 # RUTA PRINCIPAL (Redireccion segun el rol)

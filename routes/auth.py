@@ -61,6 +61,8 @@ def login():
                 return redirect(url_for('ventas.listar_ventas'))
             elif empleado.rol == 'ADMIN_INVENTARIO':
                 return redirect(url_for('productos.listar_productos'))
+            elif empleado.rol == 'PROVEEDOR':
+                return redirect(url_for('pedidos.pedidos_proveedor'))
             else:
                 return redirect(url_for('auth.login'))
         else:
@@ -88,6 +90,8 @@ def dashboard():
         return redirect(url_for('productos.listar_productos'))
     elif rol == 'GERENTE':
         return redirect(url_for('reportes.reportes'))
+    elif rol == 'PROVEEDOR':
+        return redirect(url_for('pedidos.pedidos_proveedor'))
     else:
         flash("Rol no autorizado")
         return redirect(url_for('auth.login'))
