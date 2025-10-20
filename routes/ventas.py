@@ -32,22 +32,9 @@ def nueva_venta():
         detalle_json = request.form['detalle_json']
         detalle = json.loads(detalle_json)
 
-        # Validación básica
-        if not detalle:
-            flash("El carrito está vacío.", "warning")
-            return redirect(url_for('ventas.listar_ventas'))
+        idEmpleado = session.get('idEmpleado')
+        idSucursal = session.get('idSucursal')
 
-        # Recuperar datos del cajero en sesión
-        idEmpleado = session.get('usuario_id')  # Asegúrate que el login lo guarde así
-        empleado = Empleado.query.get(idEmpleado)
-
-        if not empleado:
-            flash("Error: no se pudo identificar el empleado.", "danger")
-            return redirect(url_for('ventas.listar_ventas'))
-
-        idSucursal = empleado.idSucursal
-
-        # Calcular total
         total = sum(Decimal(p['subtotal']) for p in detalle)
 
         # Crear venta
@@ -59,37 +46,45 @@ def nueva_venta():
             total=total
         )
         db.session.add(venta)
-        db.session.flush()  # obtiene idVenta antes del commit
+        db.session.flush()  # obtiene idVenta antes de commit
 
-        # Agregar detalle de productos
+        # Insertar detalles de venta y actualizar stock
         for p in detalle:
-            producto = Producto.query.get(int(p['id']))
-            if not producto:
-                continue
+            producto = Producto.query.get(p['id'])
+            if producto:
+                producto.stock -= p['cantidad']
 
-            # Actualizar stock
-            if producto.stock < p['cantidad']:
-                flash(f"Stock insuficiente para {producto.nombre}", "danger")
-                db.session.rollback()
-                return redirect(url_for('ventas.listar_ventas'))
+                detalle_venta = DetalleVenta(
+                    idVenta=venta.idVenta,
+                    idProducto=p['id'],
+                    cantidad=p['cantidad'],
+                    subtotal=p['subtotal']
+                )
+                db.session.add(detalle_venta)
 
-            producto.stock -= p['cantidad']
+        # ---- Cálculo y registro de puntos de fidelización ----
+        puntos_ganados = int(total // 1000)  # 1 punto por cada 1000 COP
+        if puntos_ganados > 0:
+            cliente = Cliente.query.get(idCliente)
+            if cliente:
+                cliente.puntosAcumulados += puntos_ganados
 
-            detalle_venta = DetalleVenta(
-                idVenta=venta.idVenta,
-                idProducto=producto.idProducto,
-                cantidad=p['cantidad'],
-                subtotal=p['subtotal']
-            )
-            db.session.add(detalle_venta)
+                movimiento = Fidelizacion(
+                    idCliente=idCliente,
+                    puntosGanados=puntos_ganados,
+                    puntosRedimidos=0,
+                    saldo=cliente.puntosAcumulados
+                )
+                db.session.add(movimiento)
 
         db.session.commit()
-        flash("Venta registrada correctamente.", "success")
+        flash(f"Venta registrada correctamente. Cliente ganó {puntos_ganados} puntos.", "success")
 
     except Exception as e:
         db.session.rollback()
         flash(f"Error al registrar la venta: {str(e)}", "danger")
 
     return redirect(url_for('ventas.listar_ventas'))
+
 
 
