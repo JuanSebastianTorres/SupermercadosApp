@@ -2,61 +2,144 @@
 {% block content %}
 <h2>Gestión de Pedidos a Proveedores</h2>
 
-<!-- Formulario para nuevo pedido -->
-<form method="POST" action="{{ url_for('pedidos.nuevo_pedido') }}">
-  <label>Proveedor:</label>
-  <select name="idProveedor" required>
-    {% for p in proveedores %}
-      <option value="{{ p.idProveedor }}">{{ p.nombre }}</option>
-    {% endfor %}
-  </select>
-
-  <h4>Productos</h4>
-  <div id="productosContainer">
-    <div>
-      <select name="producto[]">
-        {% for prod in productos %}
-          <option value="{{ prod.idProducto }}">{{ prod.nombre }}</option>
-        {% endfor %}
-      </select>
-      <input type="number" name="cantidad[]" min="1" value="1">
-    </div>
+<!-- FORMULARIO PRINCIPAL -->
+<form id="formPedido" method="POST" action="{{ url_for('pedidos.nuevo_pedido') }}">
+  <div style="text-align:center; margin-bottom:15px;">
+    <label style="font-weight:bold;">Proveedor:</label>
+    <select name="idProveedor" id="idProveedor" required style="width:250px; padding:6px; border-radius:5px;">
+      <option value="" disabled selected>Seleccione un proveedor</option>
+      {% for p in proveedores %}
+        <option value="{{ p.idProveedor }}">{{ p.nombre }}</option>
+      {% endfor %}
+    </select>
   </div>
-  <button type="button" onclick="agregarProducto()">Agregar Producto</button>
-  <button type="submit">Registrar Pedido</button>
+
+  <!-- SELECCIÓN DE PRODUCTOS -->
+  <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:20px;">
+    <label style="font-weight:bold;">Producto:</label>
+    <select id="productoSelect" style="width:280px; padding:6px; border-radius:5px;">
+      {% for prod in productos %}
+        <option value="{{ prod.idProducto }}">{{ prod.nombre }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="number" id="cantidadInput" min="1" placeholder="Cantidad"
+           style="width:100px; padding:6px; border-radius:5px;" required>
+
+    <button type="button" id="agregarProducto"
+            style="background-color:#0369a1; color:white; border:none; border-radius:6px; padding:8px 16px; cursor:pointer;">
+      Agregar al pedido
+    </button>
+  </div>
+
+  <!-- CARRITO DE PEDIDO -->
+  <h3 style="text-align:center;">Productos del Pedido</h3>
+  <table id="tablaPedido" border="1" cellpadding="5"
+         style="width:90%; margin:auto; background:#fafafa; border-collapse:collapse;">
+    <thead style="background:#e2e8f0;">
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <input type="hidden" name="detalle_json" id="detalle_json">
+
+  <!-- BOTONES PRINCIPALES -->
+  <div style="text-align:center; margin-top:20px;">
+    <button type="submit"
+            style="background-color:#004080; color:white; padding:10px 25px; border-radius:6px; border:none; font-weight:bold;">
+      Registrar Pedido
+    </button>
+  </div>
 </form>
 
 <hr>
 
-<h3>Pedidos Existentes</h3>
-<table border="1" cellpadding="5">
-  <tr><th>ID</th><th>Proveedor</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr>
-  {% for p in pedidos %}
+<!-- LISTADO DE PEDIDOS EXISTENTES -->
+<h3 style="text-align:center;">Pedidos Existentes</h3>
+<table border="1" cellpadding="5"
+       style="width:90%; margin:auto; background:#fafafa; border-collapse:collapse;">
+  <thead style="background:#e2e8f0;">
     <tr>
-      <td>{{ p.idPedido }}</td>
-      <td>{{ p.proveedor.nombre }}</td>
-      <td>{{ p.fechaPedido }}</td>
-      <td>{{ p.estado }}</td>
-      <td>
-        <form method="POST" action="{{ url_for('pedidos.cambiar_estado_admin', idPedido=p.idPedido) }}">
-          <select name="estado">
-            <option value="PENDIENTE">Pendiente</option>
-            <option value="ENVIADO">Enviado</option>
-            <option value="RECIBIDO">Recibido</option>
-            <option value="CANCELADO">Cancelado</option>
-          </select>
-          <button type="submit">Actualizar</button>
-        </form>
-      </td>
+      <th>ID</th>
+      <th>Proveedor</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Acciones</th>
     </tr>
-  {% endfor %}
+  </thead>
+  <tbody>
+    {% for p in pedidos %}
+      <tr>
+        <td>{{ p.idPedido }}</td>
+        <td>{{ p.proveedor.nombre }}</td>
+        <td>{{ p.fechaPedido }}</td>
+        <td>{{ p.estado }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('pedidos.cambiar_estado_admin', idPedido=p.idPedido) }}">
+            <select name="estado" style="border-radius:5px;">
+              <option value="PENDIENTE" {% if p.estado == 'PENDIENTE' %}selected{% endif %}>Pendiente</option>
+              <option value="ENVIADO" {% if p.estado == 'ENVIADO' %}selected{% endif %}>Enviado</option>
+              <option value="RECIBIDO" {% if p.estado == 'RECIBIDO' %}selected{% endif %}>Recibido</option>
+              <option value="CANCELADO" {% if p.estado == 'CANCELADO' %}selected{% endif %}>Cancelado</option>
+            </select>
+            <button type="submit"
+                    style="background-color:#0369a1; color:white; border:none; border-radius:5px; padding:5px 10px; cursor:pointer;">
+              Actualizar
+            </button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
 </table>
 
 <script>
-function agregarProducto() {
-  const div = document.createElement("div");
-  div.innerHTML = document.querySelector("#productosContainer div").innerHTML;
-  document.getElementById("productosContainer").appendChild(div);
+const carrito = [];
+const tabla = document.querySelector("#tablaPedido tbody");
+const inputDetalle = document.getElementById("detalle_json");
+
+document.getElementById("agregarProducto").addEventListener("click", () => {
+  const select = document.getElementById("productoSelect");
+  const id = select.value;
+  const nombre = select.options[select.selectedIndex].text;
+  const cantidad = parseInt(document.getElementById("cantidadInput").value);
+
+  if (!cantidad || cantidad <= 0) {
+    alert("Ingrese una cantidad válida.");
+    return;
+  }
+
+  const existente = carrito.find(p => p.id === id);
+  if (existente) {
+    existente.cantidad += cantidad;
+  } else {
+    carrito.push({ id, nombre, cantidad });
+  }
+
+  actualizarTabla();
+});
+
+function actualizarTabla() {
+  tabla.innerHTML = "";
+  carrito.forEach((p, i) => {
+    tabla.innerHTML += `
+      <tr>
+        <td>${p.nombre}</td>
+        <td>${p.cantidad}</td>
+        <td><button type="button" onclick="eliminarProducto(${i})">❌</button></td>
+      </tr>`;
+  });
+  inputDetalle.value = JSON.stringify(carrito);
+}
+
+function eliminarProducto(i) {
+  carrito.splice(i, 1);
+  actualizarTabla();
 }
 </script>
 {% endblock %}
