@@ -20,7 +20,7 @@
       {# --- Opciones para ADMIN DE INVENTARIO --- #}
       {% elif session.get('rol') == 'ADMIN_INVENTARIO' %}
         | <a href="{{ url_for('productos.listar_productos') }}">Productos</a>
-          <a href="{{ url_for('pedidos.listar_pedidos') }}">Creación de pedidos</a>
+        | <a href="{{ url_for('pedidos.listar_pedidos') }}">Creación de pedidos</a>
 
       {# --- Opciones para GERENTE --- #}
       {% elif session.get('rol') == 'GERENTE' %}
