@@ -48,6 +48,7 @@ def login():
             session['usuario_id'] = empleado.idEmpleado
             session['rol'] = empleado.rol
             session['nombre'] = empleado.nombre
+            session['idSucursal'] = empleado.idSucursal
             session.permanent = False
             
             flash(f"Bienvenido, {empleado.nombre} ({empleado.rol})", "success")
