@@ -1,10 +1,28 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h2>Registro de Ventas</h2>
+<h2 style="text-align:center;">Registro de Ventas</h2>
 
-<form id="formVenta" method="POST" action="{{ url_for('ventas.nueva_venta') }}">
+<!-- Mostrar mensajes flash -->
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+  {% if mensajes %}
+    <div style="width: 80%; margin: 10px auto;">
+      {% for categoria, mensaje in mensajes %}
+        <div class="flash-message {{ categoria }}" style="
+          padding:10px; 
+          border-radius:6px; 
+          margin-bottom:10px; 
+          text-align:center;
+        ">
+          {{ mensaje }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<form id="formVenta" method="POST" action="{{ url_for('ventas.nueva_venta') }}" style="max-width: 900px; margin:auto;">
   
-  <!-- Selección del cliente -->
+  <!-- Selección de cliente -->
   <div style="text-align:center; margin-bottom:15px;">
     <label style="font-weight:bold;">Cliente:</label>
     <select name="idCliente" id="idCliente" required style="width:300px; padding:6px; border-radius:5px;">
@@ -16,7 +34,7 @@
   </div>
 
   <!-- Selección del canal -->
-  <div style="text-align:center; margin-bottom:15px;">
+  <div style="text-align:center; margin-bottom:20px;">
     <label style="font-weight:bold;">Canal de Venta:</label>
     <select name="canal" id="canal" required style="width:200px; padding:6px; border-radius:5px;">
       <option value="POS">Física (POS)</option>
@@ -26,39 +44,52 @@
 
   <hr>
 
-  <!-- Sección de productos -->
+  <!-- Selección de productos -->
   <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:20px;">
     <label style="font-weight:bold;">Producto:</label>
     <select id="productoSelect" style="width:280px; padding:6px; border-radius:5px;">
-      <option value="" disabled selected>Seleccione un producto</option>
       {% for p in productos %}
         <option value="{{ p.idProducto }}" data-precio="{{ p.precio }}">
           {{ p.nombre }} (${{ p.precio }})
         </option>
       {% endfor %}
     </select>
-
     <input type="number" id="cantidadInput" min="1" placeholder="Cantidad"
            style="width:100px; padding:6px; border-radius:5px;" required>
-
     <button type="button" id="agregarProducto"
             style="background-color:#0369a1; color:white; border:none; border-radius:6px; padding:8px 16px; cursor:pointer;">
       Agregar al carrito
     </button>
   </div>
 
-  <hr>
-
-  <!-- Campo oculto para enviar carrito -->
+  <!-- Campo oculto donde se envía el JSON -->
   <input type="hidden" name="detalle_json" id="detalle_json">
 
+  <hr>
+
+  <!-- Tabla del carrito -->
+  <h3 style="text-align:center;">Carrito de Compra</h3>
+  <table id="tablaCarrito" border="1" cellpadding="5" style="width:90%; margin:auto; background:#fafafa; border-collapse:collapse;">
+    <thead style="background:#e2e8f0;">
+      <tr>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h3 style="text-align:right; margin-right:5%;">Total: $<span id="totalVenta">0</span></h3>
+
   <!-- Botones principales -->
-  <div style="text-align:center; margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+  <div style="text-align:center; margin-top:20px; display:flex; justify-content:center; gap:20px;">
     <button type="submit"
             style="background-color:#004080; color:white; padding:10px 25px; border-radius:6px; border:none; font-weight:bold;">
       Registrar Venta
     </button>
-
     <a href="{{ url_for('clientes.listar_clientes') }}"
        style="background-color:#6b7280; color:white; padding:10px 25px; border-radius:6px; text-decoration:none; font-weight:bold;">
        Nuevo Cliente
@@ -66,26 +97,6 @@
   </div>
 </form>
 
-<hr>
-
-<!-- CARRITO DE COMPRA -->
-<h3 style="text-align:center;">Carrito de Compra</h3>
-<table id="tablaCarrito" border="1" cellpadding="5" style="width:90%; margin:auto; background:#fafafa; border-collapse:collapse;">
-  <thead style="background:#e2e8f0;">
-    <tr>
-      <th>Producto</th>
-      <th>Precio</th>
-      <th>Cantidad</th>
-      <th>Subtotal</th>
-      <th>Acción</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<h3 style="text-align:right; margin-right:5%;">Total: $<span id="totalVenta">0</span></h3>
-
-<!-- SCRIPT DE CARRITO -->
 <script>
 const carrito = [];
 const tabla = document.querySelector("#tablaCarrito tbody");
@@ -96,14 +107,10 @@ const inputDetalle = document.getElementById("detalle_json");
 document.getElementById("agregarProducto").addEventListener("click", () => {
   const select = document.getElementById("productoSelect");
   const id = select.value;
-  const nombre = select.options[select.selectedIndex]?.text.split(" ($")[0];
-  const precio = parseInt(select.options[select.selectedIndex]?.dataset.precio);
+  const nombre = select.options[select.selectedIndex].text.split(" ($")[0];
+  const precio = parseInt(select.options[select.selectedIndex].dataset.precio);
   const cantidad = parseInt(document.getElementById("cantidadInput").value);
 
-  if (!id) {
-    alert("Seleccione un producto válido.");
-    return;
-  }
   if (!cantidad || cantidad <= 0) {
     alert("Ingrese una cantidad válida.");
     return;
@@ -120,7 +127,7 @@ document.getElementById("agregarProducto").addEventListener("click", () => {
   actualizarTabla();
 });
 
-// Actualizar tabla del carrito
+// Actualizar tabla y total
 function actualizarTabla() {
   tabla.innerHTML = "";
   let total = 0;
@@ -132,27 +139,17 @@ function actualizarTabla() {
         <td>$${p.precio}</td>
         <td>${p.cantidad}</td>
         <td>$${p.subtotal}</td>
-        <td><button type="button" onclick="eliminarProducto(${i})">❌</button></td>
+        <td><button type="button" onclick="eliminarProducto(${i})" style="color:red; border:none; background:none; cursor:pointer;">❌</button></td>
       </tr>`;
   });
-  totalVenta.textContent = total;
+  totalVenta.textContent = total.toLocaleString();
   inputDetalle.value = JSON.stringify(carrito);
 }
 
-// Eliminar producto
 function eliminarProducto(i) {
   carrito.splice(i, 1);
   actualizarTabla();
 }
-
-// Validar antes de enviar
-document.getElementById("formVenta").addEventListener("submit", (event) => {
-  if (carrito.length === 0) {
-    alert("Debe agregar al menos un producto antes de registrar la venta.");
-    event.preventDefault();
-  } else {
-    inputDetalle.value = JSON.stringify(carrito);
-  }
-});
 </script>
 {% endblock %}
+
