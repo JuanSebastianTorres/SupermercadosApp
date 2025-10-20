@@ -46,6 +46,7 @@ def login():
 
         if empleado and empleado.check_password(password):
             session['usuario_id'] = empleado.idEmpleado
+            session['idEmpleado'] = empleado.idEmpleado 
             session['rol'] = empleado.rol
             session['nombre'] = empleado.nombre
             session['idSucursal'] = empleado.idSucursal
