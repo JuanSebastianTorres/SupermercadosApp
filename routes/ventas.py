@@ -150,7 +150,7 @@ def nueva_venta():
             cliente_nombre=cliente_nombre,
             fecha=venta.fechaVenta.strftime("%Y-%m-%d %H:%M:%S"),
             items=items_for_pdf,
-            total=float(total),
+            total=int(total),
             empleado_nombre=empleado_nombre,
             sucursal=sucursal_nombre
         )
