@@ -16,6 +16,7 @@
       {% if session.get('rol') == 'CAJERO' %}
         | <a href="{{ url_for('ventas.listar_ventas') }}">Ventas</a>
         | <a href="{{ url_for('clientes.listar_clientes') }}">Clientes</a>
+        | <a href="{{ url_for('facturas.listar_facturas') }}">Facturas</a>
 
       {# --- Opciones para ADMIN DE INVENTARIO --- #}
       {% elif session.get('rol') == 'ADMIN_INVENTARIO' %}
@@ -26,23 +27,25 @@
       {% elif session.get('rol') == 'GERENTE' %}
         | <a href="{{ url_for('empleados.listar_empleados') }}">Empleados</a>
         | <a href="{{ url_for('reportes.reportes') }}">Reportes</a>
+        | <a href="{{ url_for('facturas.listar_facturas') }}">Facturas</a>
 
-        {# --- Opciones para Proveedor --- #}
+      {# --- Opciones para PROVEEDOR --- #}
       {% elif session.get('rol') == 'PROVEEDOR' %}
         | <a href="{{ url_for('pedidos.pedidos_proveedor') }}">Gestión de pedidos</a>
 
-      {% if session.get('rol') in ['CAJERO', 'GERENTE'] %}
-      <li><a href="{{ url_for('facturas.listar_facturas') }}">Facturas</a></li>
-      
       {% endif %}
 
       | <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+
     </nav>
     {% endif %}
   </header>
 
+  <main>
     {% block content %}
     {% endblock %}
   </main>
+
 </body>
 </html>
+
