@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>🧾 Detalle de Factura</h2>
+
+<div style="background:white; padding:20px; border-radius:8px; width:70%; margin:auto;">
+
+  <h3>Factura #{{ factura.idVenta }}</h3>
+  <p><strong>Cliente:</strong> {{ factura.cliente }}</p>
+  <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+  <p><strong>Sucursal:</strong> {{ factura.sucursal }}</p>
+  <p><strong>Atendido por:</strong> {{ factura.creado_por }}</p>
+
+  <hr>
+
+  <h4>Productos</h4>
+  <table border="1" cellpadding="6" style="width:100%; border-collapse:collapse;">
+    <thead style="background:#e2e8f0;">
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in factura.detalles %}
+      <tr>
+        <td>{{ item.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.precio }}</td>
+        <td>${{ item.subtotal }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3 style="text-align:right; margin-top:20px;">
+    Total: ${{ factura.total }}
+  </h3>
+
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+  <a href="{{ url_for('facturas.descargar_factura', idVenta=factura.idVenta) }}"
+     class="btn btn-primary">
+     Descargar PDF
+  </a>
+</div>
+
+{% endblock %}
+

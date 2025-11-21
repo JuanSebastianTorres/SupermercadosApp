@@ -1,25 +1,84 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 {% block content %}
-<h2>Facturas (Gerente / Cajero)</h2>
 
-<table border="1" cellpadding="6" style="width:90%; margin:auto;">
-  <tr>
-    <th>ID Venta</th>
-    <th>Cliente</th>
-    <th>Fecha</th>
-    <th>Total</th>
-    <th>Acción</th>
-  </tr>
-  {% for f in facturas %}
+<h2>📄 Facturas Registradas</h2>
+
+<!-- ============================
+     FILTROS
+============================ -->
+<form method="GET" style="margin-bottom:20px; display:flex; gap:15px; flex-wrap:wrap;">
+
+  <div>
+    <label>ID Venta:</label><br>
+    <input type="number" name="idVenta" placeholder="Ej: 12" class="form-control">
+  </div>
+
+  <div>
+    <label>Cliente:</label><br>
+    <input type="text" name="cliente" placeholder="Nombre del cliente" class="form-control">
+  </div>
+
+  <div>
+    <label>Fecha:</label><br>
+    <input type="date" name="fecha" class="form-control">
+  </div>
+
+  {% if session['rol'] == 'GERENTE' %}
+  <div>
+    <label>Empleado (creador):</label><br>
+    <input type="text" name="empleado" placeholder="Cajero" class="form-control">
+  </div>
+
+  <div>
+    <label>Sucursal:</label><br>
+    <input type="text" name="sucursal" placeholder="Sucursal" class="form-control">
+  </div>
+  {% endif %}
+
+  <div style="align-self:flex-end;">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </div>
+</form>
+
+<hr>
+
+<!-- ============================
+     TABLA DE FACTURAS
+============================ -->
+<table border="1" cellpadding="6" style="width:100%; border-collapse:collapse; background:white;">
+  <thead style="background:#e2e8f0;">
+    <tr>
+      <th>ID Venta</th>
+      <th>Cliente</th>
+      <th>Fecha</th>
+      <th>Total</th>
+      <th>Sucursal</th>
+      <th>Empleado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for f in facturas %}
     <tr>
       <td>{{ f.idVenta }}</td>
       <td>{{ f.cliente }}</td>
       <td>{{ f.fecha }}</td>
       <td>${{ f.total }}</td>
+      <td>{{ f.sucursal }}</td>
+      <td>{{ f.creado_por }}</td>
       <td>
-        <a href="{{ url_for('facturas.descargar_factura', idVenta=f.idVenta) }}">Descargar PDF</a>
+        <a href="{{ url_for('facturas.ver_factura', idFactura=f._id) }}" class="btn btn-secondary">
+          Ver
+        </a>
+        <a href="{{ url_for('facturas.descargar_factura', idVenta=f.idVenta) }}"
+           class="btn btn-primary">
+          Descargar
+        </a>
       </td>
     </tr>
-  {% endfor %}
+    {% endfor %}
+  </tbody>
 </table>
+
 {% endblock %}
+
