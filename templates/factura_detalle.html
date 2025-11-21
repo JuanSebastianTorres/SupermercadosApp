@@ -13,27 +13,28 @@
 
   <hr>
 
-  <h4>Productos</h4>
-  <table border="1" cellpadding="6" style="width:100%; border-collapse:collapse;">
-    <thead style="background:#e2e8f0;">
-      <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio</th>
-        <th>Subtotal</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in factura.detalles %}
-      <tr>
-        <td>{{ item.nombre }}</td>
-        <td>{{ item.cantidad }}</td>
-        <td>${{ item.precio }}</td>
-        <td>${{ item.subtotal }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<h4>Productos</h4>
+<table border="1" cellpadding="6" style="width:100%; border-collapse:collapse;">
+  <thead style="background:#e2e8f0;">
+    <tr>
+      <th>Producto</th>
+      <th>Cantidad</th>
+      <th>Precio</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in factura.items %}
+    <tr>
+      <td>{{ item.producto }}</td>
+      <td>{{ item.cantidad }}</td>
+      <td>${{ item.precio }}</td>
+      <td>${{ item.subtotal }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 
   <h3 style="text-align:right; margin-top:20px;">
     Total: ${{ factura.total }}
