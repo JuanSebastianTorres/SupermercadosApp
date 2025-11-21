@@ -23,7 +23,7 @@
     <input type="date" name="fecha" class="form-control">
   </div>
 
-  {% if session['rol'] == 'GERENTE' %}
+  {% if session['rol'] == 'GERENTE' or session['rol'] == 'CAJERO' %}
   <div>
     <label>Empleado (creador):</label><br>
     <input type="text" name="empleado" placeholder="Cajero" class="form-control">
