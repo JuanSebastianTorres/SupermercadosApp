@@ -52,6 +52,7 @@ from routes.ventas import ventas_bp
 from routes.reportes import reportes_bp
 from routes.empleados import empleados_bp
 from routes.pedidos import pedidos_bp
+from routes.facturas import facturas_bp
 
 # Registrar Blueprints
 app.register_blueprint(auth_bp)
@@ -61,6 +62,8 @@ app.register_blueprint(ventas_bp)
 app.register_blueprint(reportes_bp)
 app.register_blueprint(empleados_bp)
 app.register_blueprint(pedidos_bp)
+app.register_blueprint(facturas_bp)
+
 
 
 # ---------------------------------------------

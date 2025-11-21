@@ -1,10 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from database import db
-from models import Venta, DetalleVenta, Producto, Cliente, Fidelizacion
+from models import Venta, DetalleVenta, Producto, Cliente, Fidelizacion, Empleado, Sucursal
 import json
 from decimal import Decimal
 from datetime import datetime
 from routes.auth import login_requerido, rol_requerido
+
+# ---- NUEVOS IMPORTS PARA FACTURAS ----
+from invoices import generar_factura_pdf
+from mongodb import get_db
+import base64
+import io
 
 ventas_bp = Blueprint('ventas', __name__)
 
@@ -21,7 +27,7 @@ def listar_ventas():
     return render_template('ventas.html', ventas=ventas, clientes=clientes, productos=productos)
 
 # =========================================
-# REGISTRAR UNA NUEVA VENTA
+# REGISTRAR UNA NUEVA VENTA + FACTURA PDF + MONGODB
 # =========================================
 @ventas_bp.route('/nueva_venta', methods=['POST'])
 @login_requerido
@@ -42,7 +48,7 @@ def nueva_venta():
         print("Detalle cargado:", detalle)
 
         # Obtener datos del cajero logueado
-        idEmpleado = session.get('idEmpleado')
+        idEmpleado = session.get('idEmpleado')   # Mantengo tu nombre
         idSucursal = session.get('idSucursal')
         print("Empleado activo:", idEmpleado)
         print("Sucursal activa:", idSucursal)
@@ -68,6 +74,7 @@ def nueva_venta():
         db.session.flush()  # obtiene idVenta antes del commit
 
         # Registrar los detalles
+        items_for_pdf = []  # para la factura PDF
         for p in detalle:
             producto = Producto.query.get(p['id'])
             if not producto:
@@ -83,6 +90,14 @@ def nueva_venta():
                 subtotal=p['subtotal']
             )
             db.session.add(detalle_venta)
+
+            # Datos para PDF
+            items_for_pdf.append({
+                "producto": producto.nombre,
+                "cantidad": p['cantidad'],
+                "precio": int(producto.precio),
+                "subtotal": float(p['subtotal'])
+            })
 
         # -------------------------------
         # Actualizar puntos de fidelización
@@ -103,10 +118,49 @@ def nueva_venta():
 
             print(f"Puntos agregados a {cliente.nombre}: +{puntos_ganados}")
 
-        # Guardar todo
         db.session.commit()
-        flash("✅ Venta registrada correctamente.", "success")
         print("Venta creada correctamente con ID:", venta.idVenta)
+
+        # ===============================================================
+        #        🧾 GENERAR FACTURA PDF Y GUARDARLA EN MONGODB
+        # ===============================================================
+
+        cliente_nombre = (
+            f"{cliente.nombre} {cliente.apellido}"
+            if cliente else "Cliente Ocasional"
+        )
+
+        empleado = Empleado.query.get(idEmpleado)
+        sucursal = Sucursal.query.get(idSucursal)
+
+        empleado_nombre = f"{empleado.nombre} {empleado.apellido}" if empleado else None
+        sucursal_nombre = sucursal.nombre if sucursal else None
+
+        pdf_bytes = generar_factura_pdf(
+            venta_id=venta.idVenta,
+            cliente_nombre=cliente_nombre,
+            fecha=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            items=items_for_pdf,
+            total=float(total),
+            empleado_nombre=empleado_nombre,
+            sucursal=sucursal_nombre
+        )
+
+        # Guardar en MongoDB
+        db_mongo = get_db()
+        documento = {
+            "idVenta": int(venta.idVenta),
+            "cliente": cliente_nombre,
+            "fecha": datetime.now(),
+            "total": float(total),
+            "items": items_for_pdf,
+            "pdfBase64": base64.b64encode(pdf_bytes).decode("utf-8"),
+            "creado_por": empleado_nombre,
+            "sucursal": sucursal_nombre
+        }
+        db_mongo.facturas.insert_one(documento)
+
+        flash("✅ Venta registrada y factura generada correctamente.", "success")
 
     except Exception as e:
         db.session.rollback()
@@ -114,6 +168,7 @@ def nueva_venta():
         print("ERROR:", e)
 
     return redirect(url_for('ventas.listar_ventas'))
+
 
 
 

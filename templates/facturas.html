@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Facturas (Gerente / Cajero)</h2>
+
+<table border="1" cellpadding="6" style="width:90%; margin:auto;">
+  <tr>
+    <th>ID Venta</th>
+    <th>Cliente</th>
+    <th>Fecha</th>
+    <th>Total</th>
+    <th>Acción</th>
+  </tr>
+  {% for f in facturas %}
+    <tr>
+      <td>{{ f.idVenta }}</td>
+      <td>{{ f.cliente }}</td>
+      <td>{{ f.fecha }}</td>
+      <td>${{ f.total }}</td>
+      <td>
+        <a href="{{ url_for('facturas.descargar_factura', idVenta=f.idVenta) }}">Descargar PDF</a>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}
