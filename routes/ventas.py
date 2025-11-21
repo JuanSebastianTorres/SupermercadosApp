@@ -5,12 +5,13 @@ import json
 from decimal import Decimal
 from datetime import datetime
 from routes.auth import login_requerido, rol_requerido
-
-# ---- NUEVOS IMPORTS PARA FACTURAS ----
 from invoices import generar_factura_pdf
 from mongodb import get_db
 import base64
 import io
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from mongodb import get_db
 
 ventas_bp = Blueprint('ventas', __name__)
 

@@ -30,10 +30,10 @@
         {# --- Opciones para Proveedor --- #}
       {% elif session.get('rol') == 'PROVEEDOR' %}
         | <a href="{{ url_for('pedidos.pedidos_proveedor') }}">Gestión de pedidos</a>
-      {% endif %}
 
       {% if session.get('rol') in ['CAJERO', 'GERENTE'] %}
       <li><a href="{{ url_for('facturas.listar_facturas') }}">Facturas</a></li>
+      
       {% endif %}
 
       | <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
