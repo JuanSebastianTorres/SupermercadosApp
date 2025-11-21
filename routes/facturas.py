@@ -40,7 +40,7 @@ def listar_facturas():
         query["fecha"] = {"$regex": fecha}
 
     # -----------------------------
-    # FILTROS AVANZADOS (solo gerente)
+    # FILTROS AVANZADOS 
     # -----------------------------
     if session.get("rol") == "GERENTE":
 
