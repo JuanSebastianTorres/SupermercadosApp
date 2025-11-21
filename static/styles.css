@@ -154,4 +154,10 @@ h2, h3 {
   text-align: center;
 }
 
+.btn-ver {
+    background-color: #3498db;
+}
 
+.btn-descargar {
+    background-color: #2ecc71;
+}

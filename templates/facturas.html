@@ -67,11 +67,11 @@
       <td>{{ f.sucursal }}</td>
       <td>{{ f.creado_por }}</td>
       <td>
-        <a href="{{ url_for('facturas.ver_factura', idFactura=f._id) }}" class="btn btn-secondary">
+        <a href="{{ url_for('facturas.ver_factura', idFactura=f._id) }}" class="btn btn-ver">
           Ver
         </a>
         <a href="{{ url_for('facturas.descargar_factura', idVenta=f.idVenta) }}"
-           class="btn btn-primary">
+           class="btn btn-descargar">
           Descargar
         </a>
       </td>

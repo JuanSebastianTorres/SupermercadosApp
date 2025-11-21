@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>🧾 Detalle de Factura</h2>
+<h2> Detalle de Factura</h2>
 
 <div style="background:white; padding:20px; border-radius:8px; width:70%; margin:auto;">
 
@@ -43,7 +43,7 @@
 
 <div style="text-align:center; margin-top:20px;">
   <a href="{{ url_for('facturas.descargar_factura', idVenta=factura.idVenta) }}"
-     class="btn btn-primary">
+     class="btn btn-descargar">
      Descargar PDF
   </a>
 </div>
