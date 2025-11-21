@@ -25,7 +25,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for item in factura.items %}
+    {% for item in factura["items"] %}
     <tr>
       <td>{{ item.producto }}</td>
       <td>{{ item.cantidad }}</td>
@@ -35,7 +35,6 @@
     {% endfor %}
   </tbody>
 </table>
-
 
   <h3 style="text-align:right; margin-top:20px;">
     Total: ${{ factura.total }}
@@ -51,5 +50,6 @@
 </div>
 
 {% endblock %}
+
 
 
