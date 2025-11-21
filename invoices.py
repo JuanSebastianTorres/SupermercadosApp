@@ -64,7 +64,7 @@ def generar_factura_pdf(venta_id, cliente_nombre, fecha, items, total, empleado_
     # PIE DE PÁGINA
     # ========================
     pdf.setFont("Helvetica", 10)
-    pdf.drawString(40, 50, "Gracias por su compra. Puede descargar esta factura desde su panel de usuario.")
+    pdf.drawString(40, 50, "Gracias por su compra.")
 
     pdf.save()
     buffer.seek(0)

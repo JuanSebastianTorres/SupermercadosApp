@@ -9,6 +9,7 @@ from routes.auth import login_requerido, rol_requerido
 from invoices import generar_factura_pdf 
 from mongodb import get_db
 import base64
+from zoneinfo import ZoneInfo
 
 ventas_bp = Blueprint('ventas', __name__)
 
@@ -53,7 +54,7 @@ def nueva_venta():
             return redirect(url_for('ventas.listar_ventas'))
 
         # Obtener empleado y sucursal desde session
-        idEmpleado = session.get('usuario_id')          # auth guarda 'usuario_id'
+        idEmpleado = session.get('usuario_id')        
         idSucursal = session.get('idSucursal')
 
         if not idEmpleado or not idSucursal:
@@ -76,8 +77,9 @@ def nueva_venta():
             idEmpleado=int(idEmpleado),
             idSucursal=int(idSucursal),
             canal=canal,
-            total=int(total),  # si tu columna es Integer; si es decimal ajústalo
-            fechaVenta=datetime.now()
+            total=int(total),  
+            fechaVenta=datetime.now(ZoneInfo("America/Bogota"))
+
         )
         db.session.add(venta)
         db.session.flush()  # obtener venta.idVenta antes del commit
@@ -87,7 +89,7 @@ def nueva_venta():
         for p in detalle:
             pid = int(p.get('id'))
             cantidad = int(p.get('cantidad', 0))
-            subtotal = Decimal(str(p.get('subtotal', 0)))
+            subtotal = int(str(p.get('subtotal', 0)))
 
             producto = Producto.query.get(pid)
             if not producto:
@@ -100,7 +102,7 @@ def nueva_venta():
                 idVenta=venta.idVenta,
                 idProducto=pid,
                 cantidad=cantidad,
-                subtotal=int(subtotal)  # según tu modelo; adaptar si decimal
+                subtotal=int(subtotal)
             )
             db.session.add(detalle_venta)
 
@@ -110,7 +112,7 @@ def nueva_venta():
                 "producto": producto.nombre,
                 "cantidad": cantidad,
                 "precio": int(producto.precio),
-                "subtotal": float(subtotal)
+                "subtotal": int(subtotal)
             })
 
         # Actualizar puntos de fidelizacion si existe cliente
@@ -148,7 +150,7 @@ def nueva_venta():
         pdf_result = generar_factura_pdf(
             venta_id=venta.idVenta,
             cliente_nombre=cliente_nombre,
-            fecha=venta.fechaVenta.strftime("%Y-%m-%d %H:%M:%S"),
+            fecha=datetime.now(ZoneInfo("America/Bogota")).strftime("%Y-%m-%d %H:%M:%S"),
             items=items_for_pdf,
             total=int(total),
             empleado_nombre=empleado_nombre,
@@ -175,7 +177,7 @@ def nueva_venta():
             "idVenta": int(venta.idVenta),
             "cliente": cliente_nombre,
             "fecha": venta.fechaVenta,
-            "total": float(total),
+            "total": int(total),
             "items": items_for_pdf,
             "creado_por": empleado_nombre,
             "sucursal": sucursal_nombre
