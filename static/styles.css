@@ -154,14 +154,19 @@ h2, h3 {
   text-align: center;
 }
 
-.btn-ver {
-    background-color: #0c4a6e;
+.btn-ver, .btn-descargar {
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-decoration: none;
     color: white;
-    cursor: pointer;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.btn-ver {
+    background-color: #007bff;
 }
 
 .btn-descargar {
-    background-color: #0c4a6e;
-    color: white;
-    cursor: pointer;
+    background-color: #28a745;
 }

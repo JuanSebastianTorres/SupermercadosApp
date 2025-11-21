@@ -42,10 +42,10 @@
 </div>
 
 <div style="text-align:center; margin-top:20px;">
-  <button href="{{ url_for('facturas.descargar_factura', idVenta=factura.idVenta) }}"
+  <a href="{{ url_for('facturas.descargar_factura', idVenta=factura.idVenta) }}"
      class="btn btn-descargar">
      Descargar PDF
-  </button>
+  </a>
 </div>
 
 {% endblock %}
